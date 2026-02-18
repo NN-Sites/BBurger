@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B בורגר יבנה | המבורגר פרימיום וכשר למהדרין</title>
-    <meta name="description" content="בי בורגר יבנה - המבורגר בקר פרימיום, חלת שניצל וקציצות טלה. כשר למהדרין בהשגחת בד''ץ בית יוסף. משלוחים ביבנה והסביבה.">
+    <meta name="description" content="בי בורגר יבנה - המבורגר בקר פרימיום, חלת שניצל קריספי, סלטים טריים ותוספות. כשר למהדרין בהשגחת בד''ץ בית יוסף.">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Assistant:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,9 +13,10 @@
             --secondary: #e63946;
             --dark: #0a0a0a;
             --gray: #1a1a1a;
-            --light-gray: #f4f4f4;
             --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.3);
+            --text-light: #f1f1f1;
+            --text-muted: #bbbbbb; 
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,10 +27,11 @@
             color: var(--white);
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         header {
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
             padding: 10px 5%;
             display: flex;
@@ -44,14 +46,14 @@
 
         .logo-container { display: flex; flex-direction: column; }
         .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
-        .kashrut-tag { font-size: 0.75rem; color: #ccc; }
+        .kashrut-tag { font-size: 0.8rem; color: var(--text-light); }
 
         nav ul { display: flex; list-style: none; gap: 20px; }
-        nav a { color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
-        nav a:hover { color: var(--primary); }
+        nav a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.3s; padding: 5px; }
+        nav a:hover { color: var(--primary); outline: 1px solid var(--primary); outline-offset: 4px; }
 
         .hero {
-            height: 95vh;
+            height: 80vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
                         url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
             background-size: cover;
@@ -62,11 +64,12 @@
             align-items: center;
             text-align: center;
             padding: 20px;
+            margin-top: 60px;
         }
 
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; margin-bottom: 10px; color: var(--white); }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; }
         .hero h1 span { color: var(--primary); }
-        .hero p { font-size: clamp(1.1rem, 4vw, 1.6rem); margin-bottom: 35px; max-width: 700px; }
+        .hero p { font-size: clamp(1.1rem, 4vw, 1.6rem); margin-bottom: 35px; max-width: 700px; color: var(--text-light); }
 
         .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .btn {
@@ -75,17 +78,16 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 1.1rem;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s;
             display: flex;
             align-items: center;
             gap: 10px;
             box-shadow: var(--shadow);
         }
-        
         .btn-order { background: var(--primary); color: #000; }
-        .btn-order:hover { background: var(--white); transform: scale(1.05); }
-        .btn-waze { background: #00e5ff; color: #000; }
-        .btn-waze:hover { transform: scale(1.05); }
+        .btn-order:hover { background: var(--white); transform: translateY(-2px); }
+        .btn-waze { background: #00bcd4; color: #000; }
+        .btn-waze:hover { transform: translateY(-2px); }
 
         .info-strip {
             display: grid;
@@ -93,20 +95,17 @@
             background: var(--gray);
             padding: 40px 5%;
             gap: 20px;
-            border-bottom: 1px solid #333;
         }
 
-        .info-item {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.03);
-        }
-        .info-item h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.2rem; }
-        .info-item p { font-size: 1rem; color: #ddd; }
+        .info-item { text-align: center; }
+        .info-item h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
+        .info-item p { color: var(--text-light); }
 
-        /* סקשן תפריט חדש */
-        .menu-section { padding: 80px 5%; max-width: 1000px; margin: 0 auto; }
+        .menu-section { padding: 60px 5%; max-width: 1100px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-header h2 { font-size: 2.5rem; color: var(--primary); }
+        .section-header .line { width: 60px; height: 4px; background: var(--secondary); margin: 10px auto; }
+
         .menu-category { margin-bottom: 50px; }
         .menu-category h3 { 
             color: var(--primary); 
@@ -116,98 +115,65 @@
             margin-bottom: 25px;
             padding-bottom: 5px;
         }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .menu-item { 
             background: #151515; 
             padding: 20px; 
-            border-radius: 15px; 
-            border: 1px solid #222;
-            transition: 0.3s;
-        }
-        .menu-item:hover { border-color: var(--primary); transform: translateY(-3px); }
-        .menu-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .menu-item-title { font-weight: 700; font-size: 1.2rem; color: var(--white); }
-        .menu-item-price { color: var(--primary); font-weight: 900; font-size: 1.1rem; }
-        .menu-item-desc { color: #aaa; font-size: 0.9rem; }
-
-        /* סקשן ביקורות גוגל */
-        .reviews-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; text-align: center; }
-        .section-header { text-align: center; margin-bottom: 50px; }
-        .section-header h2 { font-size: 2.5rem; color: var(--primary); }
-        .section-header div { width: 60px; height: 4px; background: var(--secondary); margin: 10px auto; }
-
-        .google-rating {
-            background: #222;
-            display: inline-flex;
-            align-items: center;
-            padding: 15px 30px;
-            border-radius: 50px;
-            margin-bottom: 40px;
-            gap: 15px;
+            border-radius: 12px; 
             border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .rating-score { font-size: 2rem; font-weight: 900; color: var(--primary); }
-        .stars { color: #fbbc05; font-size: 1.2rem; }
+        .menu-item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .menu-item-title { font-weight: 700; font-size: 1.15rem; color: var(--white); }
+        .menu-item-price { color: var(--primary); font-weight: 900; white-space: nowrap; margin-right: 10px; }
+        .menu-item-desc { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; }
 
-        .reviews-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .review-card {
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: right;
-            border: 1px solid #333;
-            transition: 0.3s;
-        }
-        .review-card:hover { border-color: var(--primary); background: #222; }
-        .reviewer-name { font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
-        .review-text { font-style: italic; color: #ccc; font-size: 0.95rem; }
+        .reviews-section { padding: 60px 5%; background: #050505; text-align: center; }
+        .google-rating { margin-bottom: 30px; }
+        .rating-score { font-size: 2.5rem; font-weight: 900; color: var(--primary); }
+        .stars { color: #fbbc05; font-size: 1.5rem; }
 
         .google-btn {
             display: inline-block;
-            margin-top: 40px;
-            color: #fff;
+            margin-top: 30px;
+            padding: 15px 35px;
+            color: var(--white);
             text-decoration: none;
-            border-bottom: 1px dashed var(--primary);
-            padding-bottom: 5px;
+            border: 2px dashed var(--primary);
+            border-radius: 50px;
+            font-weight: bold;
             transition: 0.3s;
         }
-        .google-btn:hover { color: var(--primary); }
+        .google-btn:hover {
+            background: var(--primary);
+            color: #000;
+            border-style: solid;
+        }
 
-        /* פוטר */
         footer {
             background: #000;
-            padding: 60px 5% 20px;
+            padding: 60px 5%;
             text-align: center;
             border-top: 2px solid var(--primary);
         }
-
-        .footer-content { margin-bottom: 30px; }
-        .footer-content h2 { color: var(--primary); margin-bottom: 15px; }
+        footer p { color: var(--white); font-weight: bold; margin-bottom: 10px; }
+        .footer-credit { color: var(--text-muted); font-size: 0.9rem; margin-top: 20px; }
+        .footer-credit a { color: var(--primary); text-decoration: none; font-weight: bold; }
         
-        .credit {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #222;
-            font-size: 0.9rem;
-            color: #888;
-        }
-        .credit a {
+        .acc-link {
+            display: inline-block;
+            margin-bottom: 15px;
             color: var(--primary);
-            text-decoration: none;
-            font-weight: bold;
+            text-decoration: underline;
+            font-size: 0.95rem;
         }
-        .credit a:hover { text-decoration: underline; }
 
         @media (max-width: 768px) {
             nav { display: none; }
-            .hero { height: 80vh; }
+            .hero h1 { font-size: 2.8rem; }
             .btn { width: 100%; justify-content: center; }
-            .section-header h2 { font-size: 2rem; }
         }
     </style>
 </head>
@@ -218,196 +184,139 @@
             <div class="logo">B BURGER</div>
             <div class="kashrut-tag">כשר למהדרין - בד"ץ בית יוסף</div>
         </div>
-        <nav>
+        <nav aria-label="תפריט ראשי">
             <ul>
-                <li><a href="#menu">התפריט שלנו</a></li>
-                <li><a href="#reviews">מה אומרים עלינו?</a></li>
-                <li><a href="tel:089432222">להזמנות</a></li>
+                <li><a href="#menu">תפריט</a></li>
+                <li><a href="#reviews">ביקורות</a></li>
+                <li><a href="tel:089432222">הזמנות</a></li>
             </ul>
         </nav>
     </header>
 
-    <section class="hero">
-        <h1>B בורגר <span>יבנה</span></h1>
-        <p>חווית בשרים פרימיום בלב העיר: המבורגרים עסיסיים, שניצל בחלה של יום שישי וקציצות טלה שמרגשות את החיך.</p>
-        <div class="btn-group">
-            <a href="tel:089432222" class="btn btn-order">
-                <span>📞</span> להזמנות: 08-9432222
-            </a>
-            <a href="https://www.waze.com/ul?ll=31.87245,34.74300&navigate=yes&z=17&to=place.ChIJxQaX5OG7AhURXgsTWwEftnE" target="_blank" class="btn btn-waze">
-                <span>🚗</span> ניווט לדרור 14
-            </a>
-        </div>
-    </section>
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">B בורגר <span>יבנה</span></h1>
+            <p>המבורגר פרימיום, חלות שניצל טריות ותוספות מפנקות. חווית טעמים כשרה למהדרין בלב יבנה.</p>
+            <div class="btn-group">
+                <a href="tel:089432222" class="btn btn-order" aria-label="התקשרו להזמנה">📞 08-9432222</a>
+                <a href="https://www.waze.com/ul?ll=31.87245,34.74300&navigate=yes" target="_blank" rel="noopener" class="btn btn-waze">🚗 ניווט לסניף</a>
+            </div>
+        </section>
 
-    <div class="info-strip">
-        <div class="info-item">
-            <h3>📍 כתובתנו</h3>
-            <p>הדרור 14, מרכז מסחרי, יבנה</p>
-        </div>
-        <div class="info-item">
-            <h3>⏰ שעות פעילות</h3>
-            <p>א'-ה': 10:00 - 22:00</p>
-            <p>שבתות וחגים - סגור</p>
-        </div>
-        <div class="info-item">
-            <h3>🛵 משלוחים</h3>
-            <p>מגיעים לכל יבנה והמושבים בסביבה</p>
-        </div>
-    </div>
+        <section class="info-strip">
+            <div class="info-item"><h2>📍 כתובת</h2><p>הדרור 14, יבנה</p></div>
+            <div class="info-item"><h2>⏰ שעות פעילות</h2><p>א'-ה' 10:00-22:00</p></div>
+            <div class="info-item"><h2>🛵 משלוחים</h2><p>יבנה והסביבה</p></div>
+        </section>
 
-    <section class="menu-section" id="menu">
-        <div class="section-header">
-            <h2>התפריט שלנו</h2>
-            <div></div>
-        </div>
+        <section class="menu-section" id="menu">
+            <div class="section-header">
+                <h2>התפריט המעודכן</h2>
+                <div class="line" aria-hidden="true"></div>
+            </div>
 
-        <div class="menu-category">
-            <h3>מנות דגל והמבורגר</h3>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">המבורגר בקר</span>
-                        <span class="menu-item-price">₪33.00</span>
-                    </div>
-                    <p class="menu-item-desc">קציצת בקר בגודל לבחירתכם, מוגש עם ירקות ורטבים לבחירה</p>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">שניצל קריספי בחלה</span>
-                        <span class="menu-item-price">₪50.00</span>
-                    </div>
-                    <p class="menu-item-desc">שניצל קריספי בחלת הבית עם מטבוחה, חצילים ופלפל חריף</p>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">נקניקיות מרגז חריפות</span>
-                        <span class="menu-item-price">₪45.00</span>
+            <div class="menu-category">
+                <h3>🍔 המבורגר</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">המבורגר בקר</span><span class="menu-item-price">₪33.00</span></div>
+                        <p class="menu-item-desc">קציצת בקר בגודל לבחירה, מוגש עם ירקות ורטבים לבחירה</p>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="menu-category">
-            <h3>בבאגט שנאפה במקום</h3>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">באגט שניצל קריספי</span>
-                        <span class="menu-item-price">₪50.00</span>
+            <div class="menu-category">
+                <h3>🥖 מנות הדגל וחלה</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">שניצל קריספי בחלה</span><span class="menu-item-price">₪50.00</span></div>
+                        <p class="menu-item-desc">חלת הבית עם מטבוחה, חצילים ופלפל חריף</p>
                     </div>
-                    <p class="menu-item-desc">שניצל קריספי בבאגט, מוגש עם ירקות ורטבים לבחירה</p>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">באגט מרגז חריפות</span>
-                        <span class="menu-item-price">₪50.00</span>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">נקניקיות מרגז חריפות</span><span class="menu-item-price">₪45.00</span></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="menu-category">
-            <h3>סלטים ותוספות</h3>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">סלט שניצל</span>
-                        <span class="menu-item-price">₪70.00</span>
+            <div class="menu-category">
+                <h3>🥖 באגט (נאפה במקום)</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">באגט שניצל קריספי</span><span class="menu-item-price">₪50.00</span></div>
+                        <p class="menu-item-desc">מוגש עם ירקות ורטבים לבחירה</p>
                     </div>
-                    <p class="menu-item-desc">חסה, מלפפון, עגבניה, בצל סגול ורצועות שניצל קריספי (עם וינגרט)</p>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">סלט ישראלי</span>
-                        <span class="menu-item-price">₪50.00</span>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">צ'יפס (קטן/גדול)</span>
-                        <span class="menu-item-price">₪18 / ₪45</span>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">טבעות בצל / צ'יפס בטטה</span>
-                        <span class="menu-item-price">₪20.00</span>
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">כרובית בצ'ילי / טחינה</span>
-                        <span class="menu-item-price">₪45.00</span>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">באגט נקניקיות מרגז חריפות</span><span class="menu-item-price">₪50.00</span></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="menu-category">
-            <h3>שתייה קלה</h3>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">פחיות (קולה/זירו/פאנטה)</span>
-                        <span class="menu-item-price">₪10.00</span>
+            <div class="menu-category">
+                <h3>🥗 סלטים</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">סלט שניצל</span><span class="menu-item-price">₪70.00</span></div>
+                        <p class="menu-item-desc">חסה, מלפפון, עגבניה, בצל סגול ורצועות שניצל קריספי</p>
                     </div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-item-header">
-                        <span class="menu-item-title">ספרייט זירו / פריגת</span>
-                        <span class="menu-item-price">₪12.00</span>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">סלט ישראלי</span><span class="menu-item-price">₪50.00</span></div>
+                        <p class="menu-item-desc">חסה, מלפפון, עגבניה ובצל סגול, מוגש עם רוטב וינגרט</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <section class="reviews-section" id="reviews">
-        <div class="section-header">
-            <h2>לקוחות ממליצים</h2>
-            <div></div>
-        </div>
+            <div class="menu-category">
+                <h3>🍟 תוספות</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">צ'יפס (קטן/גדול)</span><span class="menu-item-price">₪18 / ₪45</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">הום פרייז</span><span class="menu-item-price">₪45.00</span></div>
+                        <p class="menu-item-desc">קוביות תפו"א מוקפצות בצ'ילי מתוק</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">כרובית בצ'ילי / בטחינה</span><span class="menu-item-price">₪45.00</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">צ'יפס בטטה / טבעות בצל</span><span class="menu-item-price">₪20.00</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">פוטטו</span><span class="menu-item-price">₪18.00</span></div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="google-rating">
-            <div class="rating-score">4.6 כוכבים בגוגל</div>
-            <div>
+            <div class="menu-category">
+                <h3>🥤 שתייה קלה</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">פחיות (קולה, זירו, פאנטה)</span><span class="menu-item-price">₪10.00</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-header"><span class="menu-item-title">ספרייט זירו / פריגת ענבים</span><span class="menu-item-price">₪12.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviews-section" id="reviews">
+            <div class="section-header"><h2>ביקורות גוגל</h2></div> 
+            <div class="google-rating" aria-label="דירוג 4.6 מתוך 5">
+                <div class="rating-score">4.6</div>
                 <div class="stars">★★★★★</div>
-                <div style="font-size: 0.8rem; color: #888;">Google Reviews</div>
             </div>
-        </div>
-
-        <div class="reviews-grid">
-            <div class="review-card">
-                <span class="reviewer-name">לירן לוי</span>
-                <div class="stars" style="margin-bottom: 10px;">★★★★★</div>
-                <p class="review-text">"המבורגר פשוט מעולה, בשר איכותי מאוד ושירות מהיר. אחד הטובים שאכלתי באזור."</p>
-            </div>
-            <div class="review-card">
-                <span class="reviewer-name">מיטל אברהם</span>
-                <div class="stars" style="margin-bottom: 10px;">★★★★★</div>
-                <p class="review-text">"החלה עם השניצל פשוט חלום! הכל טרי, נקי וטעים ברמות אחרות. ממליצה בחום."</p>
-            </div>
-            <div class="review-card">
-                <span class="reviewer-name">יוסי כהן</span>
-                <div class="stars" style="margin-bottom: 10px;">★★★★★</div>
-                <p class="review-text">"מקום נקי, שירות עם חיוך והכי חשוב - כשר למהדרין ברמה גבוהה מאוד."</p>
-            </div>
-        </div>
-
-        <a href="https://www.google.com/search?q=בי+בורגר+יבנה#lrd=0x1502bbe1e49706c5:0x71b61f015b130b5e,1" target="_blank" class="google-btn">צפו בכל הביקורות בגוגל ודרגו אותנו</a>
-    </section>
+            <a href="https://www.google.com/search?q=בי+בורגר+יבנה" target="_blank" rel="noopener" class="google-btn">
+                קראו את כל הביקורות בגוגל
+            </a>
+        </section>
+    </main>
 
     <footer>
-        <div class="footer-content">
-            <h2>B BURGER YAVNE</h2>
-            <p>הדרור 14, יבנה (מרכז מסחרי)</p>
-            <p>טלפון להזמנות: 08-9432222</p>
-            <p style="color: var(--primary); margin-top: 10px; font-weight: bold;">כשר למהדרין - בד"ץ בית יוסף</p>
-        </div>
-        
-        <div class="credit">
-            האתר נבנה ע"י <a href="https://did.li/NNsites" target="_blank">NNsites</a> &copy; 2026
+        <a href="accessibility.html" class="acc-link">הצהרת נגישות</a>
+        <p>B BURGER יבנה | כשר למהדרין - בד"ץ בית יוסף</p>
+        <div class="footer-credit">
+            © 2026 <br> נבנה ע"י <a href="https://did.li/NNsites" target="_blank" rel="noopener">NNsites</a>
         </div>
     </footer>
 
