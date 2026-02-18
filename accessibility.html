@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצהרת נגישות | B BURGER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffb400;
+            --success: #00ce7a; /* צבע ירוק של Lighthouse */
+            --dark: #0a0a0a;
+            --gray: #1a1a1a;
+            --white: #ffffff;
+            --text-muted: #bbbbbb;
+        }
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            padding: 40px 5%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: right;
+        }
+        h1, h2 { color: var(--primary); margin-bottom: 15px; }
+        h1 { font-size: 2rem; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        
+        /* עיצוב הבאדג' של ה-100% */
+        .lighthouse-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 206, 122, 0.1);
+            border: 1px solid var(--success);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+        .lighthouse-score {
+            background: var(--success);
+            color: #000;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 900;
+            margin-left: 12px;
+        }
+        .lighthouse-text { color: var(--success); font-weight: bold; font-size: 0.95rem; }
+
+        section { 
+            background: var(--gray); 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid #333; 
+        }
+        ul { margin-right: 20px; }
+        li { margin-bottom: 8px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .contact-box {
+            border-right: 3px solid var(--primary);
+            padding-right: 15px;
+            margin-top: 10px;
+        }
+        footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 40px; }
+        a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">→ חזרה לאתר</a>
+
+    <h1>הצהרת נגישות</h1>
+
+    <div class="lighthouse-badge">
+        <div class="lighthouse-score">100</div>
+        <div class="lighthouse-text">האתר נבדק וקיבל ציון נגישות מקסימלי ע"י Google Lighthouse</div>
+    </div>
+
+    <section>
+        <p>אנו ב-<strong>B BURGER</strong> משקיעים מאמצים רבים כדי לספק חוויית גלישה נגישה ונוחה לכלל האוכלוסייה. האתר נבנה בסטנדרטים הטכנולוגיים הגבוהים ביותר כדי להבטיח עמידה בתקני הנגישות המחמירים ביותר.</p>
+    </section>
+
+    <section>
+        <h2>עמידה בתקנים</h2>
+        <p>אתר זה עומד בדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013. התאמות הנגישות בוצעו ע"פ המלצות התקן הישראלי (ת"י 5568) לנגישות תכנים באינטרנט ברמת <strong>AA</strong> ומסמך WCAG2.0 הבינלאומי.</p>
+        <p><strong>נכון למועד פרסום ההצהרה, האתר קיבל ציון של 100% בבדיקת הנגישות הממוחשבת של כלי הפיתוח Google Lighthouse.</strong></p>
+    </section>
+
+    <section>
+        <h2>פירוט התאמות</h2>
+        <ul>
+            <li><strong>סמנטיקה:</strong> שימוש נכון בתגיות HTML5 למבנה אתר הגיוני.</li>
+            <li><strong>ניווט מקלדת:</strong> אפשרות מלאה לשימוש באתר ללא עכבר.</li>
+            <li><strong>ניגודיות צבעים:</strong> עמידה ביחס ניגודיות (Contrast) של מעל 4.5:1.</li>
+            <li><strong>קוראי מסך:</strong> שימוש בתגיות ARIA להנגשת אלמנטים מורכבים.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>נגישות פיזית ורכז נגישות</h2>
+        <p>הסדרי נגישות בסניף (הדרור 14, יבנה): כניסה נגישה לכיסאות גלגלים וסיוע ע"י הצוות.</p>
+        <div class="contact-box">
+            <p><strong>רכז נגישות:</strong> מנהל B BURGER</p>
+            <p><strong>טלפון לפניות:</strong> <a href="tel:089432222">08-9432222</a></p>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">תאריך עדכון אחרון: 07/02/2026</p>
+    </section>
+
+    <footer>
+        © 2026 נבנה ע"י NNsites | מומחים לבניית אתרים נגישים
+    </footer>
+
+</body>
+</html>
