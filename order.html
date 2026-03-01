@@ -3,36 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B BURGER | עמדת הזמנה</title>
+    <title>B BURGER | הזמנה אונליין</title>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --mcd-red: #da291c;
-            --mcd-yellow: #ffbc0d;
+            --primary: #ffb400; /* זהב/צהוב של הלוגו */
+            --primary-dark: #e6a200;
+            --secondary: #e63946; /* אדום */
             --bg-light: #f8f9fa;
             --white: #ffffff;
-            --text-dark: #292929;
+            --text-dark: #1a1a1a;
             --shadow: 0 -4px 20px rgba(0,0,0,0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Assistant', sans-serif; }
         body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
 
-        header { background: var(--white); padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.6rem; font-weight: 800; color: var(--mcd-red); }
-        .logo span { color: var(--mcd-yellow); }
+        header { 
+            background: #0a0a0a; 
+            padding: 15px; 
+            text-align: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            border-bottom: 2px solid var(--primary);
+        }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
+        .logo span { color: var(--white); }
 
         .container { max-width: 800px; margin: 0 auto; padding: 10px 15px 150px 15px; }
-        .category-title { margin: 25px 0 10px; font-size: 1.3rem; border-right: 5px solid var(--mcd-yellow); padding-right: 10px; color: #000; }
+        .category-title { margin: 25px 0 10px; font-size: 1.3rem; border-right: 5px solid var(--primary); padding-right: 10px; color: #000; }
         .section-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
         
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-        .product-card { background: var(--white); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card:active { transform: scale(0.96); }
-        .product-card h3 { font-size: 0.95rem; margin-bottom: 5px; line-height: 1.2; }
-        .product-card .price { color: var(--mcd-red); font-weight: bold; font-size: 1.1rem; }
+        .product-card { 
+            background: var(--white); 
+            border-radius: 12px; 
+            padding: 15px; 
+            text-align: center; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+            cursor: pointer; 
+            transition: 0.2s; 
+            border: 1px solid #eee; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .product-card:active { transform: scale(0.96); border-color: var(--primary); }
+        .product-card h3 { font-size: 0.95rem; margin-bottom: 5px; line-height: 1.2; font-weight: 700; }
+        .product-card .price { color: var(--secondary); font-weight: 800; font-size: 1.1rem; }
 
-        /* --- סל קניות מתקפל --- */
+        /* סל קניות */
         .cart-overlay {
             position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
             box-shadow: var(--shadow); z-index: 1000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -44,28 +66,34 @@
         .cart-handle { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; position: relative; }
         .handle-bar { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 35px; height: 4px; background: #e0e0e0; border-radius: 10px; }
         .cart-summary-text { font-weight: 700; font-size: 1rem; }
-        .cart-summary-price { color: var(--mcd-red); font-weight: 800; font-size: 1.1rem; background: #fff5f5; padding: 5px 12px; border-radius: 10px; }
+        .cart-summary-price { color: #fff; background: var(--secondary); font-weight: 800; font-size: 1.1rem; padding: 5px 15px; border-radius: 50px; }
         
         .cart-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 20px 20px; display: none; }
         .open .cart-content { display: block; }
 
-        .cart-item { background: #fdfdfd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f0f0f0; }
-        .item-row { display: flex; justify-content: space-between; font-weight: bold; }
-        .item-opts { font-size: 0.8rem; color: #777; margin-top: 3px; }
-        .btn-remove { color: var(--mcd-red); font-size: 0.75rem; margin-top: 5px; cursor: pointer; display: block; text-decoration: underline; }
+        .cart-item { background: #fdfdfd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f0f0f0; position: relative; }
+        .item-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
+        .item-opts { font-size: 0.8rem; color: #777; padding-left: 40px; }
+        .remove-item { color: var(--secondary); font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-top: 8px; display: inline-block; }
 
         .checkout-area { margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
-        .btn-whatsapp { background: #25d366; color: white; width: 100%; border: none; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-whatsapp { 
+            background: #25d366; color: white; width: 100%; border: none; padding: 16px; 
+            border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; 
+            display: flex; justify-content: center; align-items: center; gap: 8px; 
+        }
 
-        /* --- מודאל בחירה --- */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:flex-end; }
-        .modal-body { background:white; width:100%; border-radius:20px 20px 0 0; padding:20px; max-height:80vh; overflow-y:auto; }
-        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; }
-        .option-group-title { font-size: 0.9rem; font-weight: 700; margin: 15px 0 8px; color: #333; }
-        .option-label { display: flex; justify-content: space-between; background: #f7f7f7; padding: 12px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 0.95rem; }
-        .option-label input { width: 18px; height: 18px; accent-color: var(--mcd-red); }
-        .btn-add-final { width:100%; background:var(--mcd-red); color:white; border:none; padding:16px; border-radius:12px; font-weight:bold; font-size: 1.1rem; margin-top:15px; box-shadow: 0 4px 10px rgba(218, 41, 28, 0.2); }
-        .btn-cancel { width:100%; background:none; border:none; color:#999; margin-top:10px; padding: 10px; }
+        /* מודאל */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:flex-end; }
+        .modal-body { background:white; width:100%; border-radius:20px 20px 0 0; padding:25px; max-height:85vh; overflow-y:auto; }
+        .modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 5px; color: var(--primary-dark); }
+        .option-group-title { font-size: 0.95rem; font-weight: 700; margin: 20px 0 10px; color: #333; background: #fff9e6; padding: 5px 10px; border-radius: 5px; }
+        .option-label { display: flex; justify-content: space-between; background: #f7f7f7; padding: 14px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-size: 1rem; border: 1px solid transparent; }
+        .option-label:has(input:checked) { border-color: var(--primary); background: #fffcf2; }
+        .option-label input { width: 20px; height: 20px; accent-color: var(--primary-dark); }
+        
+        .btn-add-final { width:100%; background:var(--primary); color:#000; border:none; padding:18px; border-radius:12px; font-weight:800; font-size: 1.1rem; margin-top:15px; cursor: pointer; }
+        .btn-cancel { width:100%; background:none; border:none; color:#999; margin-top:10px; padding: 10px; cursor: pointer; }
 
     </style>
 </head>
@@ -170,7 +198,7 @@
     <div class="cart-content">
         <div id="cart-items-list"></div>
         <div class="checkout-area">
-            <button class="btn-whatsapp" onclick="sendToWhatsApp()">שלח הזמנה בוואטסאפ 💬</button>
+            <button class="btn-whatsapp" onclick="sendToWhatsApp()">שלח הזמנה לוואטסאפ 💬</button>
         </div>
     </div>
 </div>
@@ -179,8 +207,8 @@
     <div class="modal-body">
         <div class="modal-title" id="m-title"></div>
         <div id="m-options"></div>
-        <button class="btn-add-final" onclick="confirmAdd()">הוסף לסל ✅</button>
-        <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+        <button class="btn-add-final" onclick="confirmAdd()">הוסף להזמנה ✅</button>
+        <button class="btn-cancel" onclick="closeModal()">סגור</button>
     </div>
 </div>
 
@@ -193,7 +221,7 @@
         baguette: { free: ['כרוב סגול', 'חריף', 'מיונז', 'קטשופ', 'חרדל', 'בצל סגול'], paid: [{n:'בצל מטוגן', p:3}] },
         challa: { free: ['שניצל', 'קציצות', 'מטבוחה', 'חצילים', 'פלפל חריף', 'חומוס'], paid: [] },
         hotdog: { free: ['קטשופ', 'חרדל', 'מיונז', 'כרוב כבוש'], paid: [] },
-        family: { free: ['ציין בהערות רטבים וירקות לכל המנות'], paid: [] }
+        family: { free: ['נא לציין בהערות בסוף פירוט לכל המנות'], paid: [] }
     };
 
     function toggleCart() { document.getElementById('cart-overlay').classList.toggle('open'); }
@@ -201,7 +229,7 @@
     function openCustomizer(name, price, type) {
         activeItem = { name, price, type };
         document.getElementById('m-title').innerText = name;
-        let h = '<p class="option-group-title">מה לשים בפנים? (חינם)</p>';
+        let h = '<p class="option-group-title">בחירות למנה (חינם):</p>';
         configs[type].free.forEach(o => h += `<label class="option-label">${o}<input type="checkbox" value="${o}" class="opt"></label>`);
         if(configs[type].paid.length) {
             h += '<p class="option-group-title">תוספות בתשלום:</p>';
@@ -245,7 +273,7 @@
         document.getElementById('cart-count').innerText = cart.length;
 
         if(!cart.length) {
-            list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">הסל ריק</p>';
+            list.innerHTML = '<p style="text-align:center; color:#999; padding:40px;">הסל שלך ריק</p>';
             return;
         }
 
@@ -253,21 +281,25 @@
             <div class="cart-item">
                 <div class="item-row"><span>${item.name}</span><span>₪${item.price}</span></div>
                 <div class="item-opts">${item.opts.join(', ') || 'ללא תוספות'}</div>
-                <span class="remove-item" onclick="remove(${idx})" style="color:red; font-size:12px; cursor:pointer;">הסר</span>
+                <span class="remove-item" onclick="remove(${idx})">🗑️ הסר מהסל</span>
             </div>
         `).join('');
     }
 
     function sendToWhatsApp() {
         if(!cart.length) return;
-        let t = "*הזמנה חדשה - B BURGER*\n\n";
+        let t = "*הזמנה חדשה - B BURGER*\n";
+        t += "--------------------------\n";
         cart.forEach((i, n) => {
             t += `*${n+1}. ${i.name}* (₪${i.price})\n`;
-            if(i.opts.length) t += `   בפנים: ${i.opts.join(', ')}\n`;
+            if(i.opts.length) t += `   תוספות: ${i.opts.join(', ')}\n`;
             t += `\n`;
         });
-        t += `*סה"כ: ${document.getElementById('cart-total').innerText}*`;
-        window.open(`https://wa.me/972500000000?text=${encodeURIComponent(t)}`);
+        t += "--------------------------\n";
+        t += `*סה"כ לתשלום: ${document.getElementById('cart-total').innerText}*`;
+        
+        const phone = "972507463230"; // המספר המעודכן
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(t)}`);
     }
 </script>
 </body>
