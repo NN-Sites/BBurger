@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B BURGER | עמדת הזמנה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mcd-red: #da291c;
+            --mcd-yellow: #ffbc0d;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --text-dark: #292929;
+            --shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Assistant', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+
+        header { background: var(--white); padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--mcd-red); }
+        .logo span { color: var(--mcd-yellow); }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 10px 15px 150px 15px; }
+        .category-title { margin: 25px 0 10px; font-size: 1.3rem; border-right: 5px solid var(--mcd-yellow); padding-right: 10px; color: #000; }
+        .section-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .product-card { background: var(--white); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:active { transform: scale(0.96); }
+        .product-card h3 { font-size: 0.95rem; margin-bottom: 5px; line-height: 1.2; }
+        .product-card .price { color: var(--mcd-red); font-weight: bold; font-size: 1.1rem; }
+
+        /* --- סל קניות מתקפל --- */
+        .cart-overlay {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white);
+            box-shadow: var(--shadow); z-index: 1000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(calc(100% - 70px)); border-radius: 20px 20px 0 0;
+            display: flex; flex-direction: column; max-height: 85vh;
+        }
+        .cart-overlay.open { transform: translateY(0); }
+
+        .cart-handle { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; position: relative; }
+        .handle-bar { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 35px; height: 4px; background: #e0e0e0; border-radius: 10px; }
+        .cart-summary-text { font-weight: 700; font-size: 1rem; }
+        .cart-summary-price { color: var(--mcd-red); font-weight: 800; font-size: 1.1rem; background: #fff5f5; padding: 5px 12px; border-radius: 10px; }
+        
+        .cart-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 20px 20px; display: none; }
+        .open .cart-content { display: block; }
+
+        .cart-item { background: #fdfdfd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f0f0f0; }
+        .item-row { display: flex; justify-content: space-between; font-weight: bold; }
+        .item-opts { font-size: 0.8rem; color: #777; margin-top: 3px; }
+        .btn-remove { color: var(--mcd-red); font-size: 0.75rem; margin-top: 5px; cursor: pointer; display: block; text-decoration: underline; }
+
+        .checkout-area { margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn-whatsapp { background: #25d366; color: white; width: 100%; border: none; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+        /* --- מודאל בחירה --- */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:flex-end; }
+        .modal-body { background:white; width:100%; border-radius:20px 20px 0 0; padding:20px; max-height:80vh; overflow-y:auto; }
+        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; }
+        .option-group-title { font-size: 0.9rem; font-weight: 700; margin: 15px 0 8px; color: #333; }
+        .option-label { display: flex; justify-content: space-between; background: #f7f7f7; padding: 12px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 0.95rem; }
+        .option-label input { width: 18px; height: 18px; accent-color: var(--mcd-red); }
+        .btn-add-final { width:100%; background:var(--mcd-red); color:white; border:none; padding:16px; border-radius:12px; font-weight:bold; font-size: 1.1rem; margin-top:15px; box-shadow: 0 4px 10px rgba(218, 41, 28, 0.2); }
+        .btn-cancel { width:100%; background:none; border:none; color:#999; margin-top:10px; padding: 10px; }
+
+    </style>
+</head>
+<body>
+
+<header><div class="logo">B <span>BURGER</span></div></header>
+
+<div class="container">
+    
+    <h2 class="category-title">🍔 ארוחות המבורגר</h2>
+    <p class="section-desc">הארוחה כוללת תוספת (צ'יפס/טבעות בצל) + פחית שתייה</p>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('ארוחת 110 גרם', 50, 'burger')">
+            <h3>ארוחת 110 גרם</h3>
+            <p class="price">₪50</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('ארוחת 150 גרם', 60, 'burger')">
+            <h3>ארוחת 150 גרם</h3>
+            <p class="price">₪60</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('ארוחת 260 גרם', 70, 'burger')">
+            <h3>ארוחת 260 גרם</h3>
+            <p class="price">₪70</p>
+        </div>
+    </div>
+
+    <h2 class="category-title">🏆 חלת הבית</h2>
+    <p class="section-desc">מוגש עם מטבוחה, חצילים ופלפל חריף</p>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('חלת הבית', 45, 'challa')">
+            <h3>חלת הבית (שניצל/קציצות)</h3>
+            <p class="price">₪45</p>
+        </div>
+    </div>
+
+    <h2 class="category-title">🥖 באגטים (אפייה במקום)</h2>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('באגט שניצל קריספי', 45, 'baguette')">
+            <h3>באגט שניצל</h3>
+            <p class="price">₪45</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('באגט קציצות טלה', 50, 'baguette')">
+            <h3>באגט קציצות</h3>
+            <p class="price">₪50</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('באגט מעורב ירושלמי', 50, 'baguette')">
+            <h3>באגט מעורב</h3>
+            <p class="price">₪50</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('באגט נקניקיות מרגז', 45, 'baguette')">
+            <h3>באגט מרגז</h3>
+            <p class="price">₪45</p>
+        </div>
+    </div>
+
+    <h2 class="category-title">🌭 נקניקייה בלחמנייה</h2>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('נקניקייה בלחמנייה', 25, 'hotdog')">
+            <h3>נקניקייה בלחמנייה</h3>
+            <p class="price">₪25</p>
+        </div>
+    </div>
+
+    <h2 class="category-title">👨‍👩‍👧‍👦 קומבינות משפחתיות</h2>
+    <p class="section-desc">4 בורגרים + צ'יפס גדול + שתייה 1.5 ליטר</p>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('קומבינת 110 גרם', 145, 'family')">
+            <h3>קומבינת 110 גרם</h3>
+            <p class="price">₪145</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('קומבינת 150 גרם', 165, 'family')">
+            <h3>קומבינת 150 גרם</h3>
+            <p class="price">₪165</p>
+        </div>
+    </div>
+
+    <h2 class="category-title">🍟 תוספות</h2>
+    <div class="menu-grid">
+        <div class="product-card" onclick="quickAdd('צ\'יפס', 20)">
+            <h3>צ'יפס</h3>
+            <p class="price">₪20</p>
+        </div>
+        <div class="product-card" onclick="quickAdd('שניצלונים', 30)">
+            <h3>שניצלונים</h3>
+            <p class="price">₪30</p>
+        </div>
+        <div class="product-card" onclick="quickAdd('כדורי פירה / נאגטס', 20)">
+            <h3>נאגטס/כדורי פירה</h3>
+            <p class="price">₪20</p>
+        </div>
+    </div>
+
+</div>
+
+<div id="cart-overlay" class="cart-overlay">
+    <div class="cart-handle" onclick="toggleCart()">
+        <div class="handle-bar"></div>
+        <div class="cart-summary-text">🛒 <span id="cart-count">0</span> פריטים בסל</div>
+        <div class="cart-summary-price" id="cart-total">₪0</div>
+    </div>
+    
+    <div class="cart-content">
+        <div id="cart-items-list"></div>
+        <div class="checkout-area">
+            <button class="btn-whatsapp" onclick="sendToWhatsApp()">שלח הזמנה בוואטסאפ 💬</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-body">
+        <div class="modal-title" id="m-title"></div>
+        <div id="m-options"></div>
+        <button class="btn-add-final" onclick="confirmAdd()">הוסף לסל ✅</button>
+        <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let activeItem = null;
+
+    const configs = {
+        burger: { free: ['חסה', 'עגבניה', 'מלפפון חמוץ', 'בצל סגול', 'קטשופ', 'מיונז', 'אלף האיים'], paid: [{n:'ביצת עין', p:7}] },
+        baguette: { free: ['כרוב סגול', 'חריף', 'מיונז', 'קטשופ', 'חרדל', 'בצל סגול'], paid: [{n:'בצל מטוגן', p:3}] },
+        challa: { free: ['שניצל', 'קציצות', 'מטבוחה', 'חצילים', 'פלפל חריף', 'חומוס'], paid: [] },
+        hotdog: { free: ['קטשופ', 'חרדל', 'מיונז', 'כרוב כבוש'], paid: [] },
+        family: { free: ['ציין בהערות רטבים וירקות לכל המנות'], paid: [] }
+    };
+
+    function toggleCart() { document.getElementById('cart-overlay').classList.toggle('open'); }
+
+    function openCustomizer(name, price, type) {
+        activeItem = { name, price, type };
+        document.getElementById('m-title').innerText = name;
+        let h = '<p class="option-group-title">מה לשים בפנים? (חינם)</p>';
+        configs[type].free.forEach(o => h += `<label class="option-label">${o}<input type="checkbox" value="${o}" class="opt"></label>`);
+        if(configs[type].paid.length) {
+            h += '<p class="option-group-title">תוספות בתשלום:</p>';
+            configs[type].paid.forEach(o => h += `<label class="option-label">${o.n} (+₪${o.p})<input type="checkbox" value="${o.n}" data-p="${o.p}" class="paid-opt"></label>`);
+        }
+        document.getElementById('m-options').innerHTML = h;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function confirmAdd() {
+        let sel = [];
+        let extra = 0;
+        document.querySelectorAll('.opt:checked').forEach(c => sel.push(c.value));
+        document.querySelectorAll('.paid-opt:checked').forEach(c => {
+            sel.push(c.value);
+            extra += parseInt(c.dataset.p);
+        });
+        cart.push({ name: activeItem.name, price: activeItem.price + extra, opts: sel });
+        updateUI();
+        closeModal();
+        document.getElementById('cart-overlay').classList.add('open');
+    }
+
+    function quickAdd(name, price) {
+        cart.push({ name, price, opts: [] });
+        updateUI();
+        document.getElementById('cart-overlay').classList.add('open');
+    }
+
+    function remove(idx) {
+        cart.splice(idx, 1);
+        updateUI();
+    }
+
+    function updateUI() {
+        const list = document.getElementById('cart-items-list');
+        const total = cart.reduce((s, i) => s + i.price, 0);
+        document.getElementById('cart-total').innerText = '₪' + total;
+        document.getElementById('cart-count').innerText = cart.length;
+
+        if(!cart.length) {
+            list.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">הסל ריק</p>';
+            return;
+        }
+
+        list.innerHTML = cart.map((item, idx) => `
+            <div class="cart-item">
+                <div class="item-row"><span>${item.name}</span><span>₪${item.price}</span></div>
+                <div class="item-opts">${item.opts.join(', ') || 'ללא תוספות'}</div>
+                <span class="remove-item" onclick="remove(${idx})" style="color:red; font-size:12px; cursor:pointer;">הסר</span>
+            </div>
+        `).join('');
+    }
+
+    function sendToWhatsApp() {
+        if(!cart.length) return;
+        let t = "*הזמנה חדשה - B BURGER*\n\n";
+        cart.forEach((i, n) => {
+            t += `*${n+1}. ${i.name}* (₪${i.price})\n`;
+            if(i.opts.length) t += `   בפנים: ${i.opts.join(', ')}\n`;
+            t += `\n`;
+        });
+        t += `*סה"כ: ${document.getElementById('cart-total').innerText}*`;
+        window.open(`https://wa.me/972500000000?text=${encodeURIComponent(t)}`);
+    }
+</script>
+</body>
+</html>
