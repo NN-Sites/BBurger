@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ffb400; /* זהב/צהוב של הלוגו */
+            --primary: #ffb400; 
             --primary-dark: #e6a200;
-            --secondary: #e63946; /* אדום */
+            --secondary: #e63946; 
             --bg-light: #f8f9fa;
             --white: #ffffff;
             --text-dark: #1a1a1a;
@@ -29,8 +29,9 @@
             z-index: 100; 
             border-bottom: 2px solid var(--primary);
         }
+        /* לוגו צבעוני כברירת מחדל */
         .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
-        .logo span { color: var(--white); }
+        .logo span { color: #fff; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 10px 15px 150px 15px; }
         .category-title { margin: 25px 0 10px; font-size: 1.3rem; border-right: 5px solid var(--primary); padding-right: 10px; color: #000; }
@@ -62,15 +63,12 @@
             display: flex; flex-direction: column; max-height: 85vh;
         }
         .cart-overlay.open { transform: translateY(0); }
-
         .cart-handle { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; cursor: pointer; position: relative; }
         .handle-bar { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 35px; height: 4px; background: #e0e0e0; border-radius: 10px; }
         .cart-summary-text { font-weight: 700; font-size: 1rem; }
         .cart-summary-price { color: #fff; background: var(--secondary); font-weight: 800; font-size: 1.1rem; padding: 5px 15px; border-radius: 50px; }
-        
         .cart-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 20px 20px; display: none; }
         .open .cart-content { display: block; }
-
         .cart-item { background: #fdfdfd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f0f0f0; position: relative; }
         .item-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
         .item-opts { font-size: 0.8rem; color: #777; padding-left: 40px; }
@@ -94,7 +92,6 @@
         
         .btn-add-final { width:100%; background:var(--primary); color:#000; border:none; padding:18px; border-radius:12px; font-weight:800; font-size: 1.1rem; margin-top:15px; cursor: pointer; }
         .btn-cancel { width:100%; background:none; border:none; color:#999; margin-top:10px; padding: 10px; cursor: pointer; }
-
     </style>
 </head>
 <body>
@@ -102,7 +99,6 @@
 <header><div class="logo">B <span>BURGER</span></div></header>
 
 <div class="container">
-    
     <h2 class="category-title">🍔 ארוחות המבורגר</h2>
     <p class="section-desc">הארוחה כוללת תוספת (צ'יפס/טבעות בצל) + פחית שתייה</p>
     <div class="menu-grid">
@@ -121,7 +117,6 @@
     </div>
 
     <h2 class="category-title">🏆 חלת הבית</h2>
-    <p class="section-desc">מוגש עם מטבוחה, חצילים ופלפל חריף</p>
     <div class="menu-grid">
         <div class="product-card" onclick="openCustomizer('חלת הבית', 45, 'challa')">
             <h3>חלת הבית (שניצל/קציצות)</h3>
@@ -158,7 +153,6 @@
     </div>
 
     <h2 class="category-title">👨‍👩‍👧‍👦 קומבינות משפחתיות</h2>
-    <p class="section-desc">4 בורגרים + צ'יפס גדול + שתייה 1.5 ליטר</p>
     <div class="menu-grid">
         <div class="product-card" onclick="openCustomizer('קומבינת 110 גרם', 145, 'family')">
             <h3>קומבינת 110 גרם</h3>
@@ -180,25 +174,35 @@
             <h3>שניצלונים</h3>
             <p class="price">₪30</p>
         </div>
-        <div class="product-card" onclick="quickAdd('כדורי פירה / נאגטס', 20)">
-            <h3>נאגטס/כדורי פירה</h3>
+        <div class="product-card" onclick="quickAdd('נאגטס/כדורי פירה', 20)">
+            <h3>נאגטס/פירה</h3>
             <p class="price">₪20</p>
         </div>
     </div>
 
+    <h2 class="category-title">🥤 שתייה קלה</h2>
+    <div class="menu-grid">
+        <div class="product-card" onclick="openCustomizer('פחית שתייה', 10, 'drink')">
+            <h3>פחית</h3>
+            <p class="price">₪10</p>
+        </div>
+        <div class="product-card" onclick="openCustomizer('בקבוק קטן', 12, 'drink')">
+            <h3>בקבוק קטן</h3>
+            <p class="price">₪12</p>
+        </div>
+    </div>
 </div>
 
 <div id="cart-overlay" class="cart-overlay">
     <div class="cart-handle" onclick="toggleCart()">
         <div class="handle-bar"></div>
-        <div class="cart-summary-text">🛒 <span id="cart-count">0</span> פריטים בסל</div>
+        <div class="cart-summary-text">🛒 <span id="cart-count">0</span> פריטים</div>
         <div class="cart-summary-price" id="cart-total">₪0</div>
     </div>
-    
     <div class="cart-content">
         <div id="cart-items-list"></div>
         <div class="checkout-area">
-            <button class="btn-whatsapp" onclick="sendToWhatsApp()">שלח הזמנה לוואטסאפ 💬</button>
+            <button class="btn-whatsapp" onclick="sendToWhatsApp()">שלח הזמנה בוואטסאפ 💬</button>
         </div>
     </div>
 </div>
@@ -217,11 +221,12 @@
     let activeItem = null;
 
     const configs = {
-        burger: { free: ['חסה', 'עגבניה', 'מלפפון חמוץ', 'בצל סגול', 'קטשופ', 'מיונז', 'אלף האיים'], paid: [{n:'ביצת עין', p:7}] },
-        baguette: { free: ['כרוב סגול', 'חריף', 'מיונז', 'קטשופ', 'חרדל', 'בצל סגול'], paid: [{n:'בצל מטוגן', p:3}] },
-        challa: { free: ['שניצל', 'קציצות', 'מטבוחה', 'חצילים', 'פלפל חריף', 'חומוס'], paid: [] },
-        hotdog: { free: ['קטשופ', 'חרדל', 'מיונז', 'כרוב כבוש'], paid: [] },
-        family: { free: ['נא לציין בהערות בסוף פירוט לכל המנות'], paid: [] }
+        burger: { type: 'checkbox', free: ['חסה', 'עגבניה', 'מלפפון חמוץ', 'בצל סגול', 'קטשופ', 'מיונז', 'אלף האיים'], paid: [{n:'ביצת עין', p:7}] },
+        baguette: { type: 'checkbox', free: ['כרוב סגול', 'חריף', 'מיונז', 'קטשופ', 'חרדל', 'בצל סגול'], paid: [{n:'בצל מטוגן', p:3}] },
+        challa: { type: 'checkbox', free: ['שניצל', 'קציצות', 'מטבוחה', 'חצילים', 'פלפל חריף', 'חומוס'], paid: [] },
+        hotdog: { type: 'checkbox', free: ['קטשופ', 'חרדל', 'מיונז', 'כרוב כבוש'], paid: [] },
+        family: { type: 'checkbox', free: ['נא לציין פירוט בהערות'], paid: [] },
+        drink: { type: 'radio', free: ['קוקה קולה', 'קולה זירו', 'ספרייט', 'ספרייט זירו', 'פנטה', 'ענבים', 'מים מינרלים'], paid: [] }
     };
 
     function toggleCart() { document.getElementById('cart-overlay').classList.toggle('open'); }
@@ -229,11 +234,18 @@
     function openCustomizer(name, price, type) {
         activeItem = { name, price, type };
         document.getElementById('m-title').innerText = name;
-        let h = '<p class="option-group-title">בחירות למנה (חינם):</p>';
-        configs[type].free.forEach(o => h += `<label class="option-label">${o}<input type="checkbox" value="${o}" class="opt"></label>`);
-        if(configs[type].paid.length) {
+        const config = configs[type];
+        let h = `<p class="option-group-title">${config.type === 'radio' ? 'בחר טעם:' : 'תוספות לבחירה (חינם):'}</p>`;
+        
+        config.free.forEach((o, i) => {
+            const inputType = config.type;
+            const isChecked = (inputType === 'radio' && i === 0) ? 'checked' : '';
+            h += `<label class="option-label">${o}<input type="${inputType}" name="opt-choice" value="${o}" class="opt" ${isChecked}></label>`;
+        });
+
+        if(config.paid && config.paid.length) {
             h += '<p class="option-group-title">תוספות בתשלום:</p>';
-            configs[type].paid.forEach(o => h += `<label class="option-label">${o.n} (+₪${o.p})<input type="checkbox" value="${o.n}" data-p="${o.p}" class="paid-opt"></label>`);
+            config.paid.forEach(o => h += `<label class="option-label">${o.n} (+₪${o.p})<input type="checkbox" value="${o.n}" data-p="${o.p}" class="paid-opt"></label>`);
         }
         document.getElementById('m-options').innerHTML = h;
         document.getElementById('modal').style.display = 'flex';
@@ -271,17 +283,15 @@
         const total = cart.reduce((s, i) => s + i.price, 0);
         document.getElementById('cart-total').innerText = '₪' + total;
         document.getElementById('cart-count').innerText = cart.length;
-
         if(!cart.length) {
-            list.innerHTML = '<p style="text-align:center; color:#999; padding:40px;">הסל שלך ריק</p>';
+            list.innerHTML = '<p style="text-align:center; color:#999; padding:40px;">הסל ריק</p>';
             return;
         }
-
         list.innerHTML = cart.map((item, idx) => `
             <div class="cart-item">
                 <div class="item-row"><span>${item.name}</span><span>₪${item.price}</span></div>
                 <div class="item-opts">${item.opts.join(', ') || 'ללא תוספות'}</div>
-                <span class="remove-item" onclick="remove(${idx})">🗑️ הסר מהסל</span>
+                <span class="remove-item" onclick="remove(${idx})">🗑️ הסר</span>
             </div>
         `).join('');
     }
@@ -292,13 +302,12 @@
         t += "--------------------------\n";
         cart.forEach((i, n) => {
             t += `*${n+1}. ${i.name}* (₪${i.price})\n`;
-            if(i.opts.length) t += `   תוספות: ${i.opts.join(', ')}\n`;
+            if(i.opts.length) t += `   בחירה: ${i.opts.join(', ')}\n`;
             t += `\n`;
         });
         t += "--------------------------\n";
-        t += `*סה"כ לתשלום: ${document.getElementById('cart-total').innerText}*`;
-        
-        const phone = "972507463230"; // המספר המעודכן
+        t += `*סה"כ: ${document.getElementById('cart-total').innerText}*`;
+        const phone = "972507463230"; 
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(t)}`);
     }
 </script>
