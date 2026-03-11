@@ -39,9 +39,15 @@
         .btn-print.success { background: var(--success) !important; color: white !important; }
         .new-order { animation: blink 1.5s infinite; }
         @keyframes blink { 0% { background: #fff; } 50% { background: #fff9e6; } 100% { background: #fff; } }
+        
+        #audio-notice { background: var(--secondary); color: white; padding: 12px; text-align: center; font-weight: bold; border-radius: 12px; margin-bottom: 15px; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
+
+<div id="audio-notice" onclick="this.style.display='none'">
+    🔊 לחץ כאן פעם אחת להפעלת התראת "הזמנה חדשה"
+</div>
 
 <header>
     <div style="font-size: 1.5rem; font-weight: 800;">B BURGER | מטבח</div>
@@ -49,7 +55,7 @@
 </header>
 
 <div class="orders-grid" id="orders-list">
-    <div class="no-orders">מחפש הזמנות בשרת...</div>
+    <div class="no-orders">טוען הזמנות...</div>
 </div>
 
 <script>
@@ -64,16 +70,32 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // הסרתי את הסינון של ה-Status כדי לוודא שרואים הכל בהתחלה
+    let firstLoad = true;
+
+    // פונקציית הדיבור המעודכנת
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'he-IL';
+        msg.rate = 0.8; // המהירות הונמכה מ-1.0 ל-0.8 (יותר איטי וברור)
+        msg.pitch = 1.0; 
+        window.speechSynthesis.speak(msg);
+    }
+
     db.collection("orders")
       .orderBy("timestamp", "desc")
       .limit(20)
       .onSnapshot((snapshot) => {
-        console.log("נתונים התקבלו מהשרת:", snapshot.size, "הזמנות");
         const list = document.getElementById('orders-list');
         
+        // זיהוי הזמנה חדשה באמת
+        if (!firstLoad && snapshot.docChanges().some(change => change.type === "added")) {
+            speak("הזמנה חדשה באתר");
+        }
+        firstLoad = false;
+
         if (snapshot.empty) {
-            list.innerHTML = '<div class="no-orders">אין הזמנות במסד הנתונים</div>';
+            list.innerHTML = '<div class="no-orders">אין הזמנות</div>';
             return;
         }
 
@@ -81,8 +103,6 @@
         snapshot.forEach((doc) => {
             const order = doc.data();
             const id = doc.id;
-            
-            // מציג רק הזמנות שלא הודפסו (או הכל אם תרצה לבדוק)
             if (order.status === "printed") return;
 
             let itemsHtml = (order.items || []).map(item => `
@@ -98,11 +118,11 @@
                 <div class="order-card new-order" id="card-${id}">
                     <div class="card-header">
                         <div style="display:flex; justify-content:space-between;">
-                            <h2>${order.customerName || 'לקוח'}</h2>
+                            <h2>${order.customerName}</h2>
                             <span style="font-weight:700;">${time}</span>
                         </div>
                         <p>📍 ${order.address || 'איסוף'}</p>
-                        <p>📞 ${order.phone || ''}</p>
+                        <p>📞 ${order.phone}</p>
                     </div>
                     <div class="card-body">${itemsHtml}</div>
                     <div class="card-footer">
@@ -111,9 +131,6 @@
                     </div>
                 </div>
             `;
-        }, (error) => {
-            console.error("שגיאה במשיכת נתונים:", error);
-            document.getElementById('orders-list').innerHTML = `<div class="no-orders" style="color:red;">שגיאת תקשורת: ${error.message}</div>`;
         });
     });
 
@@ -123,7 +140,6 @@
         btn.classList.add('success');
         btn.innerHTML = '✅ מדפיס...';
 
-        // הפעלת הדפסה
         db.collection("orders").doc(id).get().then(doc => {
             const order = doc.data();
             let printContent = `<center><font size="4"><b>B BURGER</b></font><br>--------------------------------<br><b>הזמנה:</b> ${id.substring(0,5)}<br><b>לקוח:</b> ${order.customerName}<br>--------------------------------</center><br>`;
@@ -132,7 +148,6 @@
             const rawbtUrl = "rawbt:base64," + btoa(unescape(encodeURIComponent(printContent)));
             window.location.href = rawbtUrl;
 
-            // העלמה מהמסך
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => db.collection("orders").doc(id).update({ status: "printed" }), 1000);
