@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B BURGER | תפריט מלא</title>
+    <title>B BURGER | תפריט הזמנות</title>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root { --primary: #ffb400; --secondary: #e63946; --bg-light: #f8f9fa; --white: #ffffff; --radius: 18px; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Assistant', sans-serif; }
@@ -22,11 +26,22 @@
         .product-img { width: 115px; height: 115px; background-size: cover; background-position: center; flex-shrink: 0; }
         .price { color: var(--secondary); font-weight: 800; font-size: 1.3rem; margin-top: 5px; }
         h3 { font-size: 1.1rem; font-weight: 800; }
+        
         .cart-overlay { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; padding: 20px; border-radius: 30px 30px 0 0; box-shadow: 0 -8px 30px rgba(0,0,0,0.15); z-index: 2000; }
+        .btn-order { width: 100%; background: #000; color: var(--primary); border: none; padding: 18px; border-radius: 50px; font-weight: 900; font-size: 1.2rem; cursor: pointer; }
+        .btn-order:disabled { background: #666; cursor: not-allowed; }
+
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:3000; align-items:flex-end; }
         .modal-body { background:white; width:100%; border-radius:35px 35px 0 0; padding:30px; max-height:85vh; overflow-y:auto; }
         .option-label { display: flex; justify-content: space-between; background: #f1f3f5; padding: 15px; border-radius: 14px; margin-bottom: 10px; font-weight: 700; cursor: pointer; }
+        .option-label input { width: 22px; height: 22px; }
         .btn-add { width:100%; background:var(--primary); border:none; padding:20px; border-radius:18px; font-weight:800; font-size: 1.2rem; cursor: pointer; }
+
+        .input-group { margin-bottom: 15px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 700; }
+        .input-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 1rem; }
+
+        #success-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 4000; text-align: center; width: 85%; max-width: 400px; }
     </style>
 </head>
 <body>
@@ -36,24 +51,55 @@
 <div class="container" id="menu-container"></div>
 
 <div class="cart-overlay" id="cart-summary" style="display:none;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:0 10px;">
         <div style="font-weight:800;">🛒 <span id="cart-count">0</span> פריטים</div>
         <div id="cart-total" style="font-weight:900; font-size:1.6rem; color:var(--secondary);">₪0</div>
-        <button onclick="sendToWhatsApp()" style="background:#25d366; color:white; border:none; padding:15px 30px; border-radius:50px; font-weight:900; cursor:pointer;">שלח הזמנה בוואטסאפ</button>
+    </div>
+    <button class="btn-order" onclick="openDetailsModal()">🚀 למילוי פרטים וביצוע הזמנה</button>
+</div>
+
+<div id="item-modal" class="modal">
+    <div class="modal-body">
+        <h2 id="m-title" style="margin-bottom: 10px;"></h2>
+        <p style="color: #666; margin-bottom: 20px;">בחרו רטבים ותוספות:</p>
+        <div id="m-options"></div>
+        <button class="btn-add" onclick="addItemToCart()">הוספה לסל ✅</button>
+        <button onclick="closeItemModal()" style="width:100%; background:none; border:none; margin-top:15px; color:#999; font-weight:700;">ביטול</button>
     </div>
 </div>
 
-<div id="modal" class="modal">
+<div id="details-modal" class="modal">
     <div class="modal-body">
-        <h2 id="m-title" style="margin-bottom: 10px;"></h2>
-        <p id="m-desc" style="color: #666; margin-bottom: 20px;"></p>
-        <div id="m-options"></div>
-        <button class="btn-add" onclick="confirmAdd()">הוספה לסל ✅</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; margin-top:15px; color:#999; font-weight:700;">ביטול</button>
+        <h2 style="margin-bottom: 20px;">לאן לשלוח?</h2>
+        <div class="input-group"><label>שם מלא</label><input type="text" id="cust-name" placeholder="מי מזמין?"></div>
+        <div class="input-group"><label>כתובת מלאה</label><input type="text" id="cust-address" placeholder="רחוב, מספר, עיר"></div>
+        <div class="input-group"><label>מספר טלפון</label><input type="tel" id="cust-phone" placeholder="050-0000000"></div>
+        <button class="btn-order" id="submit-order-btn" onclick="sendOrderToFirebase()">אשר והזמן 🍔</button>
+        <button onclick="closeDetailsModal()" style="width:100%; background:none; border:none; margin-top:15px; color:#999; font-weight:700;">חזור לסל</button>
     </div>
+</div>
+
+<div id="success-popup">
+    <div style="font-size: 60px; color: #28a745; margin-bottom: 15px;">✅</div>
+    <h2 style="margin-bottom: 10px;">ההזמנה בדרך!</h2>
+    <p style="color: #666; margin-bottom: 20px;">ההזמנה התקבלה במטבח ותצא בקרוב.</p>
+    <button class="btn-add" onclick="resetApp()">הזמנה חדשה</button>
 </div>
 
 <script>
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCglpLNJdn_RSxhyJeOHtVINDuL4NsXXz0",
+      authDomain: "b-burger-orders.firebaseapp.com",
+      projectId: "b-burger-orders",
+      storageBucket: "b-burger-orders.firebasestorage.app",
+      messagingSenderId: "339715291942",
+      appId: "1:339715291942:web:4d8a2f2278820dfc149fe7"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // --- MENU DATA ---
     const FLAG_IMG = "https://imageproxy.wolt.com/menu/menu-images/60c87333ff747d31666da663/e585c396-4859-11ec-9147-5a8ab2ae42d1_whatsapp_image_2021_11_16_at_12.15.14.jpeg";
     const BURG_IMG = "https://imageproxy.wolt.com/menu/menu-images/60c87333ff747d31666da663/97f618ec-4859-11ec-86dc-76cec7f0d990_whatsapp_image_2021_11_16_at_12.11.46.jpeg";
 
@@ -69,7 +115,7 @@
             ]
         },
         {
-            category: "🍟 ארוחות המבורגר (המבורגר + תוספת + שתייה)",
+            category: "🍟 ארוחות המבורגר",
             items: [
                 { id: 6, name: "ארוחת 110 גר'", price: 50, type: 'meal', img: BURG_IMG },
                 { id: 7, name: "ארוחת 150 גר'", price: 60, type: 'meal', img: BURG_IMG },
@@ -109,12 +155,13 @@
         }
     ];
 
+    const burgerSauces = ['חסה', 'עגבניה', 'חמוצים', 'בצל', 'קטשופ', 'מיונז', 'חרדל', 'צ\'ילי מתוק', 'שום', 'אלף האיים', 'צ\'ילי חריף', 'ציפוטלה', 'שיפקה', 'ברביקיו', 'שזיפים'];
     const configs = {
-        burger: { free: ['חסה', 'עגבניה', 'חמוצים', 'בצל', 'קטשופ', 'מיונז', 'חרדל'], paid: [{n:'ביצת עין', p:7}] },
-        meal: { free: ['צ\'יפס', 'טבעות בצל', 'חסה', 'עגבניה', 'חמוצים', 'בצל'], paid: [] },
-        challa: { free: ['מטבוחה', 'חצילים', 'חריף', 'חומוס'], paid: [] },
-        baguette: { free: ['חומוס', 'כרוב סגול', 'סלט', 'טחינה', 'חמוצים', 'חריף'], paid: [] },
-        side: { free: ['קטשופ', 'מיונז', 'צ\'ילי'], paid: [] },
+        burger: { free: burgerSauces, paid: [{n:'ביצת עין', p:7}] },
+        meal: { free: ['צ\'יפס', 'טבעות בצל', ...burgerSauces], paid: [] },
+        challa: { free: ['מטבוחה', 'חצילים', 'חריף', 'חומוס', 'שום', 'ציפוטלה'], paid: [] },
+        baguette: { free: ['חומוס', 'כרוב סגול', 'סלט', 'טחינה', 'חמוצים', 'חריף', 'שום', 'אלף האיים'], paid: [] },
+        side: { free: ['קטשופ', 'מיונז', 'צ\'ילי מתוק', 'ברביקיו'], paid: [] },
         drink: { free: [], paid: [] }
     };
 
@@ -141,53 +188,112 @@
     }
 
     function openItem(id) {
-        let found;
-        menuData.forEach(cat => { found = found || cat.items.find(i => i.id === id); });
+        let found = null; 
+        menuData.forEach(cat => { 
+            const item = cat.items.find(i => i.id === id);
+            if(item) found = item;
+        });
+        
         activeItem = found;
         document.getElementById('m-title').innerText = found.name;
-        document.getElementById('m-desc').innerText = "בחרו תוספות ורטבים:";
         const config = configs[found.type] || {free:[], paid:[]};
+        
         let h = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">`;
         config.free.forEach(f => h += `<label class="option-label"><span>${f}</span><input type="checkbox" value="${f}" class="opt-f"></label>`);
         h += `</div>`;
-        if(config.paid.length){
+        
+        if(config.paid && config.paid.length > 0){
             h += `<p style="font-weight:800; margin:15px 0 10px;">תוספות בתשלום:</p>`;
             config.paid.forEach(p => h += `<label class="option-label"><span>${p.n} (+₪${p.p})</span><input type="checkbox" value="${p.n}" data-p="${p.p}" class="opt-p"></label>`);
         }
+        
         document.getElementById('m-options').innerHTML = h;
-        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('item-modal').style.display = 'flex';
     }
 
-    function confirmAdd() {
-        let sel = [];
-        let extra = 0;
-        document.querySelectorAll('.opt-f:checked').forEach(i => sel.push(i.value));
-        document.querySelectorAll('.opt-p:checked').forEach(i => { sel.push(i.value); extra += parseInt(i.dataset.p); });
-        cart.push({ name: activeItem.name, price: activeItem.price + extra, opts: sel });
+    function addItemToCart() {
+        let selectedOptions = [];
+        let extraPrice = 0;
+        
+        document.querySelectorAll('.opt-f:checked').forEach(i => selectedOptions.push(i.value));
+        document.querySelectorAll('.opt-p:checked').forEach(i => { 
+            selectedOptions.push(i.value); 
+            extraPrice += parseInt(i.dataset.p); 
+        });
+        
+        cart.push({ 
+            name: activeItem.name, 
+            price: activeItem.price + extraPrice, 
+            opts: selectedOptions 
+        });
+        
         updateCartUI();
-        closeModal();
+        closeItemModal();
     }
 
     function updateCartUI() {
-        const total = cart.reduce((s, i) => s + i.price, 0);
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = '₪' + total;
         document.getElementById('cart-count').innerText = cart.length;
         document.getElementById('cart-summary').style.display = cart.length ? 'block' : 'none';
     }
 
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function closeItemModal() { document.getElementById('item-modal').style.display = 'none'; }
+    function openDetailsModal() { document.getElementById('details-modal').style.display = 'flex'; }
+    function closeDetailsModal() { document.getElementById('details-modal').style.display = 'none'; }
 
-    function sendToWhatsApp() {
-        let t = "*הזמנה חדשה - B BURGER*\n--------------------------\n";
-        cart.forEach((i, n) => {
-            t += `*${n+1}. ${i.name}* (₪${i.price})\n`;
-            if(i.opts.length) t += `   - תוספות: ${i.opts.join(', ')}\n`;
-            t += `\n`;
-        });
-        t += `--------------------------\n*סה"כ לתשלום: ${document.getElementById('cart-total').innerText}*`;
-        window.open(`https://wa.me/972507463230?text=${encodeURIComponent(t)}`);
+    // פונקציית השליחה המתוקנת
+    function sendOrderToFirebase() {
+        const btn = document.getElementById('submit-order-btn');
+        const name = document.getElementById('cust-name').value.trim();
+        const addr = document.getElementById('cust-address').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+
+        if(!name || !phone) { 
+            alert("נא למלא שם ומספר טלפון"); 
+            return; 
+        }
+
+        // מניעת לחיצות כפולות
+        btn.disabled = true;
+        btn.innerText = "שולח הזמנה... ⏳";
+
+        const orderData = {
+            customerName: name,
+            address: addr,
+            phone: phone,
+            items: cart,
+            total: document.getElementById('cart-total').innerText,
+            status: "new",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        db.collection("orders").add(orderData)
+            .then(() => {
+                closeDetailsModal();
+                document.getElementById('success-popup').style.display = 'block';
+            })
+            .catch(err => {
+                console.error(err);
+                alert("שגיאה בשליחה: " + err.message);
+                btn.disabled = false;
+                btn.innerText = "אשר והזמן 🍔";
+            });
     }
 
+    function resetApp() {
+        cart = [];
+        updateCartUI();
+        document.getElementById('success-popup').style.display = 'none';
+        document.getElementById('cust-name').value = "";
+        document.getElementById('cust-address').value = "";
+        document.getElementById('cust-phone').value = "";
+        document.getElementById('submit-order-btn').disabled = false;
+        document.getElementById('submit-order-btn').innerText = "אשר והזמן 🍔";
+        window.scrollTo(0, 0);
+    }
+
+    // הפעלה ראשונית
     renderMenu();
 </script>
 </body>
