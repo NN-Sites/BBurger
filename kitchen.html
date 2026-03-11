@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B BURGER | ניהול מטבח</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root { --primary: #ffb400; --secondary: #e63946; --dark: #1a1a1a; --success: #28a745; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Assistant', sans-serif; }
+        body { background: #eef0f3; padding: 20px; color: var(--dark); }
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #000; padding: 15px 25px; border-radius: 15px; color: var(--primary);
+            margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .status-dot { width: 12px; height: 12px; background: var(--success); border-radius: 50%; display: inline-block; margin-left: 8px; }
+        .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .order-card { 
+            background: white; border-radius: 20px; overflow: hidden; 
+            display: flex; flex-direction: column; box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            border-top: 8px solid var(--primary); transition: 0.5s;
+        }
+        .order-card.fade-out { opacity: 0; transform: scale(0.9); pointer-events: none; }
+        .card-header { padding: 15px; border-bottom: 1px solid #eee; background: #fafafa; }
+        .card-body { padding: 15px; flex-grow: 1; }
+        .item-row { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #eee; }
+        .item-name { font-weight: 700; font-size: 1.1rem; }
+        .item-opts { font-size: 0.9rem; color: #555; background: #fff9e6; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+        .card-footer { padding: 15px; background: #fff; text-align: center; border-top: 1px solid #eee; }
+        .total-price { font-size: 1.4rem; font-weight: 800; color: var(--secondary); margin-bottom: 10px; display: block; }
+        .btn-print { 
+            width: 100%; background: var(--dark); color: var(--primary); border: none; 
+            padding: 15px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
+        }
+        .btn-print.success { background: var(--success) !important; color: white !important; }
+        .new-order { animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { background: #fff; } 50% { background: #fff9e6; } 100% { background: #fff; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="font-size: 1.5rem; font-weight: 800;">B BURGER | מטבח</div>
+    <div id="connection-status"><span class="status-dot"></span> מחובר</div>
+</header>
+
+<div class="orders-grid" id="orders-list">
+    <div class="no-orders">מחפש הזמנות בשרת...</div>
+</div>
+
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCglpLNJdn_RSxhyJeOHtVINDuL4NsXXz0",
+      authDomain: "b-burger-orders.firebaseapp.com",
+      projectId: "b-burger-orders",
+      storageBucket: "b-burger-orders.firebasestorage.app",
+      messagingSenderId: "339715291942",
+      appId: "1:339715291942:web:4d8a2f2278820dfc149fe7"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // הסרתי את הסינון של ה-Status כדי לוודא שרואים הכל בהתחלה
+    db.collection("orders")
+      .orderBy("timestamp", "desc")
+      .limit(20)
+      .onSnapshot((snapshot) => {
+        console.log("נתונים התקבלו מהשרת:", snapshot.size, "הזמנות");
+        const list = document.getElementById('orders-list');
+        
+        if (snapshot.empty) {
+            list.innerHTML = '<div class="no-orders">אין הזמנות במסד הנתונים</div>';
+            return;
+        }
+
+        list.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const order = doc.data();
+            const id = doc.id;
+            
+            // מציג רק הזמנות שלא הודפסו (או הכל אם תרצה לבדוק)
+            if (order.status === "printed") return;
+
+            let itemsHtml = (order.items || []).map(item => `
+                <div class="item-row">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-opts">${item.opts && item.opts.length > 0 ? item.opts.join(', ') : 'ללא תוספות'}</span>
+                </div>
+            `).join('');
+
+            const time = order.timestamp ? new Date(order.timestamp.seconds * 1000).toLocaleTimeString('he-IL', {hour: '2-digit', minute:'2-digit'}) : '--:--';
+
+            list.innerHTML += `
+                <div class="order-card new-order" id="card-${id}">
+                    <div class="card-header">
+                        <div style="display:flex; justify-content:space-between;">
+                            <h2>${order.customerName || 'לקוח'}</h2>
+                            <span style="font-weight:700;">${time}</span>
+                        </div>
+                        <p>📍 ${order.address || 'איסוף'}</p>
+                        <p>📞 ${order.phone || ''}</p>
+                    </div>
+                    <div class="card-body">${itemsHtml}</div>
+                    <div class="card-footer">
+                        <span class="total-price">${order.total}</span>
+                        <button class="btn-print" id="btn-${id}" onclick="handlePrint('${id}')">🖨️ הדפס בון</button>
+                    </div>
+                </div>
+            `;
+        }, (error) => {
+            console.error("שגיאה במשיכת נתונים:", error);
+            document.getElementById('orders-list').innerHTML = `<div class="no-orders" style="color:red;">שגיאת תקשורת: ${error.message}</div>`;
+        });
+    });
+
+    function handlePrint(id) {
+        const btn = document.getElementById(`btn-${id}`);
+        const card = document.getElementById(`card-${id}`);
+        btn.classList.add('success');
+        btn.innerHTML = '✅ מדפיס...';
+
+        // הפעלת הדפסה
+        db.collection("orders").doc(id).get().then(doc => {
+            const order = doc.data();
+            let printContent = `<center><font size="4"><b>B BURGER</b></font><br>--------------------------------<br><b>הזמנה:</b> ${id.substring(0,5)}<br><b>לקוח:</b> ${order.customerName}<br>--------------------------------</center><br>`;
+            order.items.forEach((item, i) => { printContent += `<b>${i+1}. ${item.name}</b><br><small>${item.opts.join(', ')}</small><br><br>`; });
+            
+            const rawbtUrl = "rawbt:base64," + btoa(unescape(encodeURIComponent(printContent)));
+            window.location.href = rawbtUrl;
+
+            // העלמה מהמסך
+            setTimeout(() => {
+                card.classList.add('fade-out');
+                setTimeout(() => db.collection("orders").doc(id).update({ status: "printed" }), 1000);
+            }, 1000);
+        });
+    }
+</script>
+</body>
+</html>
