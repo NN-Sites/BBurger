@@ -39,7 +39,6 @@
         .btn-print.success { background: var(--success) !important; color: white !important; }
         .new-order { animation: blink 1.5s infinite; }
         @keyframes blink { 0% { background: #fff; } 50% { background: #fff9e6; } 100% { background: #fff; } }
-        
         #audio-notice { background: var(--secondary); color: white; padding: 12px; text-align: center; font-weight: bold; border-radius: 12px; margin-bottom: 15px; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); }
     </style>
 </head>
@@ -72,13 +71,11 @@
 
     let firstLoad = true;
 
-    // פונקציית הדיבור המעודכנת
     function speak(text) {
         const msg = new SpeechSynthesisUtterance();
         msg.text = text;
         msg.lang = 'he-IL';
-        msg.rate = 0.8; // המהירות הונמכה מ-1.0 ל-0.8 (יותר איטי וברור)
-        msg.pitch = 1.0; 
+        msg.rate = 0.8; 
         window.speechSynthesis.speak(msg);
     }
 
@@ -88,7 +85,6 @@
       .onSnapshot((snapshot) => {
         const list = document.getElementById('orders-list');
         
-        // זיהוי הזמנה חדשה באמת
         if (!firstLoad && snapshot.docChanges().some(change => change.type === "added")) {
             speak("הזמנה חדשה באתר");
         }
@@ -143,7 +139,13 @@
         db.collection("orders").doc(id).get().then(doc => {
             const order = doc.data();
             let printContent = `<center><font size="4"><b>B BURGER</b></font><br>--------------------------------<br><b>הזמנה:</b> ${id.substring(0,5)}<br><b>לקוח:</b> ${order.customerName}<br>--------------------------------</center><br>`;
-            order.items.forEach((item, i) => { printContent += `<b>${i+1}. ${item.name}</b><br><small>${item.opts.join(', ')}</small><br><br>`; });
+            order.items.forEach((item, i) => { 
+                printContent += `<b>${i+1}. ${item.name}</b><br>`;
+                if(item.opts && item.opts.length > 0) {
+                    printContent += `<small>+ ${item.opts.join(', ')}</small><br>`;
+                }
+                printContent += `<br>`;
+            });
             
             const rawbtUrl = "rawbt:base64," + btoa(unescape(encodeURIComponent(printContent)));
             window.location.href = rawbtUrl;
