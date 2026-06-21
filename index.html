@@ -18,9 +18,7 @@
             --text-muted: #bbbbbb; 
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Assistant', 'Heebo', sans-serif;
             background-color: var(--dark);
@@ -29,7 +27,6 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
-
         header {
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
@@ -43,23 +40,14 @@
             z-index: 2000;
             border-bottom: 2px solid var(--primary);
         }
-
         .logo-container { display: flex; flex-direction: column; }
         .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
         .kashrut-tag { font-size: 0.8rem; color: var(--text-light); }
-
+        
         nav ul { display: flex; list-style: none; gap: 20px; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.3s; padding: 5px; }
         nav a:hover { color: var(--primary); }
         
-        .nav-order-btn {
-            background: var(--primary);
-            color: #000 !important;
-            padding: 8px 15px !important;
-            border-radius: 8px;
-            font-weight: 900 !important;
-        }
-
         .hero {
             height: 85vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
@@ -74,11 +62,10 @@
             padding: 20px;
             margin-top: 60px;
         }
-
         .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; }
         .hero h1 span { color: var(--primary); }
         .hero p { font-size: clamp(1.1rem, 4vw, 1.6rem); margin-bottom: 35px; max-width: 700px; color: var(--text-light); }
-
+        
         .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .btn {
             padding: 16px 35px;
@@ -92,12 +79,9 @@
             gap: 10px;
             box-shadow: var(--shadow);
         }
-        .btn-order { background: var(--primary); color: #000; border: 2px solid var(--primary); }
-        .btn-order:hover { background: transparent; color: var(--primary); transform: translateY(-2px); }
-        
         .btn-waze { background: #00bcd4; color: #000; }
         .btn-waze:hover { opacity: 0.9; transform: translateY(-2px); }
-
+        
         .info-strip {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -105,19 +89,18 @@
             padding: 40px 5%;
             gap: 20px;
         }
-
         .info-item { text-align: center; }
         .info-item h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
         .info-item p { color: var(--text-light); }
-
+        
         .section-header { text-align: center; margin-bottom: 40px; }
         .section-header h2 { font-size: 2.5rem; color: var(--primary); }
-
-        .reviews-section { padding: 80px 5%; background: #050505; text-align: center; }
+        
+        .reviews-section { padding: 80px 5%; background: #050505; text-align: center; padding-bottom: 120px; }
         .google-rating { margin-bottom: 30px; }
         .rating-score { font-size: 3.5rem; font-weight: 900; color: var(--primary); }
         .stars { color: #fbbc05; font-size: 1.8rem; margin: 10px 0; }
-
+        
         .google-btn {
             display: inline-block;
             margin-top: 30px;
@@ -135,33 +118,89 @@
             border-style: solid;
         }
 
-        footer {
-            background: #000;
-            padding: 60px 5%;
+        /* עיצוב הצהרת הנגישות בתחתית */
+        .accessibility-container {
             text-align: center;
-            border-top: 2px solid var(--primary);
+            padding: 20px 5%;
+            background: #000;
         }
-        footer p { color: var(--white); font-weight: bold; margin-bottom: 10px; }
-        .footer-credit { color: var(--text-muted); font-size: 0.9rem; margin-top: 20px; }
-        .footer-credit a { color: var(--primary); text-decoration: none; font-weight: bold; }
-        
         .acc-link {
             display: inline-block;
-            margin-bottom: 15px;
             color: var(--primary);
             text-decoration: underline;
             font-size: 0.95rem;
+            font-weight: bold;
         }
-
+        
         @media (max-width: 768px) {
             nav { display: none; }
             .hero h1 { font-size: 2.8rem; }
             .btn { width: 100%; justify-content: center; }
         }
+
+        /* Floating Badge Styles */
+        .floating-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 16px;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            direction: rtl;
+            user-select: none;
+            animation: floating 3s ease-in-out infinite;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .badge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .badge-title, .badge-action {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.2;
+        }
+        .badge-title {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .badge-action {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #38bdf8;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-badge:hover {
+            animation-play-state: paused;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            background-color: rgba(30, 30, 30, 0.9);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
-
     <header>
         <div class="logo-container">
             <div class="logo">B BURGER</div>
@@ -171,7 +210,6 @@
             <ul>
                 <li><a href="#reviews">ביקורות</a></li>
                 <li><a href="tel:089432222">📞 08-9432222</a></li>
-                <li><a href="order.html" class="nav-order-btn">-הזמנה אונליין -לא זמין!)</a></li>
             </ul>
         </nav>
     </header>
@@ -181,7 +219,6 @@
             <h1 id="hero-title">B בורגר <span>יבנה</span></h1>
             <p>המבורגר פרימיום, חלות שניצל טריות ותוספות מפנקות. חווית טעמים כשרה למהדרין בלב יבנה.</p>
             <div class="btn-group">
-                <a href="order.html" class="btn btn-order" aria-label="הזמינו אונליין">🍔 (לא זמין כעת) הזמנה אונליין</a>
                 <a href="https://www.waze.com/ul?ll=31.87245,34.74300&navigate=yes" target="_blank" rel="noopener" class="btn btn-waze">🚗 ניווט לסניף</a>
             </div>
         </section>
@@ -205,16 +242,18 @@
         </section>
     </main>
 
-    <footer>
+    <!-- הצהרת נגישות שנותרה לבדה בתחתית -->
+    <div class="accessibility-container">
         <a href="accessibility.html" class="acc-link">הצהרת נגישות</a>
-        <p>B BURGER יבנה | כשר למהדרין - בד"ץ בית יוסף</p>
-        <div class="footer-credit">
-            © 2026 <br> נבנה ע"י <a href="https://did.li/NNsites" target="_blank" rel="noopener">NNsites - Noam Naftali</a>
-        </div>
-    </footer>
+    </div>
 
+    <!-- Floating Badge Component -->
+    <a href="https://did.li/NetVibeWebsites" target="_blank" class="floating-badge">
+        <span class="badge-dot"></span>
+        <div class="badge-content">
+            <span class="badge-title">רוצים גם אתר כזה?</span>
+            <span class="badge-action">לחצו כאן!</span>
+        </div>
+    </a>
 </body>
 </html>
-
-
-
