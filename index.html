@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B בורגר יבנה | המבורגר פרימיום וכשר למהדרין</title>
-    <meta name="description" content="בי בורגר יבנה - המבורגר בקר פרימיום, חלת שניצל קריספי, סלטים טריים ותוספות. כשר למהדרין בהשגחת בד''ץ בית יוסף.">
+    <title>B בורגר | המבורגר פרימיום וכשר למהדרין</title>
+    <meta name="description" content="בי בורגר - המבורגר בקר פרימיום, חלת שניצל קריספי, סלטים טריים ותוספות. כשר למהדרין בהשגחת בד''ץ בית יוסף.">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=Assistant:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -79,8 +79,10 @@
             gap: 10px;
             box-shadow: var(--shadow);
         }
-        .btn-waze { background: #00bcd4; color: #000; }
-        .btn-waze:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-order { background: var(--primary); color: #000; }
+        .btn-order:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-waze { background: transparent; color: #fff; border: 2px solid #00bcd4; }
+        .btn-waze:hover { background: #00bcd4; color: #000; transform: translateY(-2px); }
         
         .info-strip {
             display: grid;
@@ -216,17 +218,18 @@
 
     <main>
         <section class="hero" aria-labelledby="hero-title">
-            <h1 id="hero-title">B בורגר <span>יבנה</span></h1>
-            <p>המבורגר פרימיום, חלות שניצל טריות ותוספות מפנקות. חווית טעמים כשרה למהדרין בלב יבנה.</p>
+            <h1 id="hero-title">B בורגר</h1>
+            <p>המבורגר פרימיום, חלות שניצל טריות ותוספות מפנקות. חווית טעמים כשרה למהדרין.</p>
             <div class="btn-group">
+                <a href="order.html" class="btn btn-order">🍔 להזמנה דרך האתר (חדש!)</a>
                 <a href="https://www.waze.com/ul?ll=31.87245,34.74300&navigate=yes" target="_blank" rel="noopener" class="btn btn-waze">🚗 ניווט לסניף</a>
             </div>
         </section>
 
         <section class="info-strip">
-            <div class="info-item"><h2>📍 כתובת</h2><p>הדרור 14, יבנה</p></div>
+            <div class="info-item"><h2>📍 כתובת</h2><p>הדרור 14</p></div>
             <div class="info-item"><h2>⏰ שעות פעילות</h2><p>א'-ה' 10:00-22:00</p></div>
-            <div class="info-item"><h2>🛵 משלוחים</h2><p>יבנה והסביבה</p></div>
+            <div class="info-item"><h2>🛵 משלוחים</h2><p>הסניף והסביבה</p></div>
         </section>
 
         <section class="reviews-section" id="reviews">
@@ -236,18 +239,16 @@
                 <div class="stars">★★★★★</div>
                 <p>מבוסס על מאות ביקורות בגוגל</p>
             </div>
-            <a href="https://www.google.com/search?q=בי+בורגר+יבנה" target="_blank" rel="noopener" class="google-btn">
+            <a href="https://www.google.com/search?q=בי+בורגר" target="_blank" rel="noopener" class="google-btn">
                 קראו את כל הביקורות בגוגל
             </a>
         </section>
     </main>
 
-    <!-- הצהרת נגישות שנותרה לבדה בתחתית -->
     <div class="accessibility-container">
         <a href="accessibility.html" class="acc-link">הצהרת נגישות</a>
     </div>
 
-    <!-- Floating Badge Component -->
     <a href="https://did.li/NetVibeWebsites" target="_blank" class="floating-badge">
         <span class="badge-dot"></span>
         <div class="badge-content">
