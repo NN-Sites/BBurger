@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בי בורגר - B Burger | פאנל ניהול הזמנות</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --dark-bg: #111827;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --body-bg: #f3f4f6;
+            --border: #e5e7eb;
+            
+            --status-new: #fef3c7;
+            --status-new-text: #d97706;
+            --status-done: #d1fae5;
+            --status-done-text: #059669;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Assistant', sans-serif; }
+        body { background-color: var(--body-bg); color: var(--text-main); padding: 20px; padding-bottom: 100px; }
+
+        header {
+            background: linear-gradient(135deg, #1f2937 0%, var(--dark-bg) 100%);
+            color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        header h1 span { color: var(--primary); }
+
+        .dashboard-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;
+        }
+        .stat-box {
+            background: white; padding: 15px; border-radius: 10px; text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--border);
+        }
+        .stat-box h3 { font-size: 0.9rem; color: var(--text-muted); }
+        .stat-box p { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
+
+        .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .order-card {
+            background: var(--card-bg); border-radius: 12px; padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid var(--border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .order-card:hover { transform: translateY(-2px); }
+
+        .order-card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .customer-name { font-weight: 800; font-size: 1.1rem; }
+        
+        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; }
+        .status-badge.חדש { background: var(--status-new); color: var(--status-new-text); }
+        .status-badge.בוצע { background: var(--status-done); color: var(--status-done-text); }
+
+        .order-items-list { flex-grow: 1; margin-bottom: 15px; }
+        .item-row { padding: 6px 0; border-bottom: 1px dashed #f3f4f6; font-size: 0.95rem; }
+        .item-row:last-child { border-bottom: none; }
+        
+        .item-note { font-size: 0.85rem; color: #ef4444; background: #fef2f2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
+        .order-footer { border-top: 1px solid var(--border); padding-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .order-total-price { font-weight: 800; color: var(--dark-bg); font-size: 1.1rem; }
+
+        .actions-group { display: flex; gap: 8px; }
+        .btn-action { padding: 8px 14px; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; color: white; transition: opacity 0.2s; }
+        .btn-action:hover { opacity: 0.9; }
+        .btn-action.btn-next { background: #10b981; }
+        .btn-action.btn-cancel { background: #ef4444; }
+
+        .no-orders { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-muted); font-size: 1.2rem; }
+
+        .restore-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #1f2937; padding: 15px; text-align: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 999;
+        }
+        .btn-restore-main {
+            background: var(--primary); color: var(--dark-bg);
+            border: none; padding: 12px 24px; border-radius: 30px;
+            font-weight: 800; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center;
+            align-items: center; z-index: 1000; padding: 20px;
+        }
+        .restore-modal {
+            background: white; width: 100%; max-width: 500px;
+            border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-height: 80vh; display: flex; flex-direction: column;
+        }
+        .restore-modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .restore-modal-header h2 { font-size: 1.3rem; font-weight: 800; }
+        .btn-close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        
+        .deleted-orders-list { overflow-y: auto; flex-grow: 1; }
+        .deleted-item-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border-bottom: 1px solid var(--border);
+        }
+        .deleted-item-row:last-child { border-bottom: none; }
+        .btn-restore-action { background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ניהול הזמנות | בי <span>בורגר</span></h1>
+        <div id="liveClock" style="font-weight: 600;">זמן אמת</div>
+    </header>
+
+    <div class="dashboard-stats">
+        <div class="stat-box">
+            <h3>הזמנות פעילות</h3>
+            <p id="statNew" style="color: var(--status-new-text);">0</p>
+        </div>
+        <div class="stat-box">
+            <h3>הזמנות שבוצעו</h3>
+            <p id="statDone" style="color: var(--status-done-text);">0</p>
+        </div>
+    </div>
+
+    <div class="orders-grid" id="ordersGrid">
+        <div class="no-orders">מתחבר לשרת ההזמנות...</div>
+    </div>
+
+    <div class="restore-bar">
+        <button class="btn-restore-main" id="btnOpenRestoreModal">🔄 שחזר הזמנה שנמחקה</button>
+    </div>
+
+    <div class="modal-overlay" id="restoreModal">
+        <div class="restore-modal">
+            <div class="restore-modal-header">
+                <h2>הזמנות שנמחקו לאחרונה</h2>
+                <button class="btn-close-modal" id="btnCloseRestoreModal">✕</button>
+            </div>
+            <div class="deleted-orders-list" id="deletedOrdersList">
+                <div style="text-align: center; color: var(--text-muted); padding: 20px;">אין הזמנות מחוקות בגיבוי.</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { database, ref } from './firebase-config.js';
+        import { onValue, update, remove, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // קישור פתוח ויציב לצליל קופה רושמת (Chaching)
+        const chachingSound = new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg");
+        // נשנה את הקובץ לסאונד קופה רושמת איכותי ומהיר מקובץ חופשי של קוד פתוח
+        chachingSound.src = "https://html5tutorial.info/media/bell.mp3"; 
+
+        let isInitialLoad = true;
+        let knownOrderIds = new Set(); // מעקב מדויק אחרי מפתחות של הזמנות קיימות
+
+        // פתרון חסימת הדפדפן: ברגע שהמשתמש קליק ראשון על המסך, הסאונד נטען ומוכן לפעולה
+        window.addEventListener('click', () => {
+            chachingSound.load();
+        }, { once: true });
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('liveClock').innerText = now.toLocaleTimeString('he-IL') + ' | ' + now.toLocaleDateString('he-IL');
+        }, 1000);
+
+        const ordersRef = ref(database, 'orders');
+        const deletedRef = ref(database, 'deleted_orders');
+
+        let globalDeletedOrders = {};
+
+        // האזנה להזמנות פעילות
+        onValue(ordersRef, (snapshot) => {
+            const grid = document.getElementById('ordersGrid');
+            grid.innerHTML = '';
+
+            let countNew = 0;
+            let countDone = 0;
+            let hasNewIncomingOrder = false;
+
+            if (!snapshot.exists()) {
+                grid.innerHTML = '<div class="no-orders">אין כרגע הזמנות במערכת 🍔</div>';
+                updateStatsDisplay(0, 0);
+                knownOrderIds.clear();
+                isInitialLoad = false;
+                return;
+            }
+
+            snapshot.forEach((childSnapshot) => {
+                const orderId = childSnapshot.key;
+                const order = childSnapshot.val();
+                const status = order.status || 'חדש';
+
+                if (status === 'חדש') countNew++;
+                if (status === 'בוצע') countDone++;
+
+                // אם אנחנו כבר אחרי טעינה ראשונית, ומגיע ID שלא ראינו מעולם - סימן שזו הזמנה חדשה לגמרי מהאתר!
+                if (!isInitialLoad && !knownOrderIds.has(orderId) && status === 'חדש') {
+                    hasNewIncomingOrder = true;
+                }
+
+                // הוספה למאגר ה-IDs המוכרים
+                knownOrderIds.add(orderId);
+
+                const card = createOrderCard(orderId, order);
+                grid.insertBefore(card, grid.firstChild);
+            });
+
+            updateStatsDisplay(countNew, countDone);
+
+            // השמעת צליל רק אם זו הזמנה חדשה באמת ברקע
+            if (hasNewIncomingOrder) {
+                chachingSound.currentTime = 0; // ניגון מההתחלה
+                chachingSound.play().catch(err => {
+                    console.log("הדפדפן חסם את השמעת הצליל. אנא לחץ קודם קליק אחד על המסך כדי לאשר אודיו.", err);
+                });
+            }
+            
+            isInitialLoad = false;
+        });
+
+        // האזנה להזמנות שנמחקו
+        onValue(deletedRef, (snapshot) => {
+            const listContainer = document.getElementById('deletedOrdersList');
+            listContainer.innerHTML = '';
+
+            if (!snapshot.exists()) {
+                listContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">אין הזמנות מחוקות בגיבוי.</div>';
+                globalDeletedOrders = {};
+                return;
+            }
+
+            globalDeletedOrders = snapshot.val();
+
+            for (const orderId in globalDeletedOrders) {
+                const order = globalDeletedOrders[orderId];
+                const customer = order.customer || {};
+                
+                const row = document.createElement('div');
+                row.className = 'deleted-item-row';
+                row.innerHTML = `
+                    <div>
+                        <strong>${customer.name || 'לקוח'}</strong> (${order.totalPrice || 0} ₪)
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${order.timestamp || ''}</div>
+                    </div>
+                    <button class="btn-restore-action" data-id="${orderId}">🔄 שחזר</button>
+                `;
+
+                row.querySelector('.btn-restore-action').addEventListener('click', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    restoreOrder(id);
+                });
+
+                listContainer.insertBefore(row, listContainer.firstChild);
+            }
+        });
+
+        function createOrderCard(orderId, order) {
+            const div = document.createElement('div');
+            div.className = 'order-card';
+
+            const customer = order.customer || {};
+            const items = order.items || {};
+            const currentStatus = order.status || 'חדש';
+
+            let itemsHTML = '';
+            for (const key in items) {
+                const item = items[key];
+                let itemMeta = '';
+                if (item.drinkType) itemMeta += ` 🥤 (${item.drinkType})`;
+                if (item.note && item.note.trim() !== '') itemMeta += `<br><span class="item-note">✏️ ${item.note}</span>`;
+
+                itemsHTML += `
+                    <div class="item-row">
+                        <strong>x${item.qty || 1}</strong> ${item.name || 'מנה'} ${itemMeta}
+                    </div>
+                `;
+            }
+
+            let actionButtonsHTML = `
+                ${currentStatus !== 'בוצע' ? `<button class="btn-action btn-next" data-id="${orderId}">בוצע ✅</button>` : ''}
+                <button class="btn-action btn-cancel" data-id="${orderId}">מחק 🗑️</button>
+            `;
+
+            div.innerHTML = `
+                <div class="order-card-header">
+                    <div>
+                        <div class="customer-name">${customer.name || 'לקוח'}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+                            📞 ${customer.phone || ''} | 📍 ${customer.method || ''}
+                            ${customer.address && customer.address !== 'איסוף עצמי' ? `<br>🏠 ${customer.address}` : ''}
+                        </div>
+                    </div>
+                    <span class="status-badge ${currentStatus}">${currentStatus}</span>
+                </div>
+                <div class="order-items-list">${itemsHTML}</div>
+                <div class="order-footer">
+                    <div class="order-total-price">סה"כ: ₪${order.totalPrice || 0}</div>
+                    <div class="actions-group">${actionButtonsHTML}</div>
+                </div>
+            `;
+
+            const nextBtn = div.querySelector('.btn-next');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => updateOrderStatus(orderId, 'בוצע'));
+            }
+            div.querySelector('.btn-cancel').addEventListener('click', () => moveOrderToDeleted(orderId, order));
+
+            return div;
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                const orderStatusRef = ref(database, `orders/${orderId}`);
+                await update(orderStatusRef, { status: newStatus });
+            } catch (error) {
+                console.error("Error updating status:", error);
+            }
+        }
+
+        async function moveOrderToDeleted(orderId, order) {
+            if (confirm("האם אתה בטוח שברצונך למחוק הזמנה זו? (ניתן לשחזר אותה מהבר למטה)")) {
+                try {
+                    const backupRef = ref(database, `deleted_orders/${orderId}`);
+                    await set(backupRef, order);
+                    
+                    const mainOrderRef = ref(database, `orders/${orderId}`);
+                    await remove(mainOrderRef);
+                } catch (error) {
+                    console.error("Error moving order to archive:", error);
+                }
+            }
+        }
+
+        async function restoreOrder(orderId) {
+            const orderToRestore = globalDeletedOrders[orderId];
+            if (!orderToRestore) return;
+
+            try {
+                const mainOrderRef = ref(database, `orders/${orderId}`);
+                await set(mainOrderRef, orderToRestore);
+
+                const backupRef = ref(database, `deleted_orders/${orderId}`);
+                await remove(backupRef);
+                
+                alert("ההזמנה שוחזרה בהצלחה ללוח הפעיל!");
+            } catch (error) {
+                console.error("Error restoring order:", error);
+            }
+        }
+
+        function updateStatsDisplay(numNew, numDone) {
+            document.getElementById('statNew').innerText = numNew;
+            document.getElementById('statDone').innerText = numDone;
+        }
+
+        const modal = document.getElementById('restoreModal');
+        document.getElementById('btnOpenRestoreModal').addEventListener('click', () => modal.style.display = 'flex');
+        document.getElementById('btnCloseRestoreModal').addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    </script>
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בי בורגר - B Burger | הזמנה אונליין</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #f59e0b; /* זהב-כתום חם */
+            --primary-hover: #d97706;
+            --dark-bg: #111827; /* רקע כהה עמוק */
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --body-bg: #f3f4f6;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Assistant', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-main);
+            padding-bottom: 110px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1f2937 0%, var(--dark-bg) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .logo-area {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 8px;
+        }
+
+        header h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+        }
+
+        header h1 span {
+            color: var(--primary);
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 4px;
+            font-weight: 300;
+        }
+
+        /* ניווט קטגוריות מהיר במובייל */
+        .categories-nav {
+            display: flex;
+            overflow-x: auto;
+            background: white;
+            padding: 12px 10px;
+            position: sticky;
+            top: 93px;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            scrollbar-width: none;
+        }
+
+        .categories-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            flex: 0 0 auto;
+            padding: 10px 20px;
+            margin: 0 4px;
+            border-radius: 30px;
+            background-color: #f3f4f6;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #4b5563;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+        }
+
+        .category-tab.active {
+            background-color: var(--dark-bg);
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .menu-container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        .category-section {
+            margin-bottom: 35px;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--dark-bg);
+            position: relative;
+            display: inline-block;
+            padding-right: 12px;
+        }
+
+        .category-title::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 4px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* כרטיס מנה */
+        .menu-item-wrapper {
+            background: var(--card-bg);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .menu-item {
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .item-details {
+            flex: 1;
+            padding-left: 15px;
+        }
+
+        .item-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--dark-bg);
+            margin-bottom: 4px;
+        }
+
+        .item-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .item-price {
+            font-weight: 800;
+            color: var(--dark-bg);
+            font-size: 1.25rem;
+        }
+
+        .action-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            min-width: 105px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            background: #f3f4f6;
+            border-radius: 30px;
+            padding: 4px;
+        }
+
+        .btn-qty {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        .qty-count {
+            width: 32px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .btn-add-initial {
+            background: var(--dark-bg);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-note-toggle {
+            font-size: 0.85rem;
+            color: var(--primary-hover);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+            display: none;
+        }
+
+        /* תיבת אפשרויות והערות */
+        .note-container {
+            display: none;
+            background: #f9fafb;
+            padding: 15px 18px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .drink-selector-wrapper {
+            margin-bottom: 10px;
+        }
+
+        .drink-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: block;
+            color: var(--dark-bg);
+        }
+
+        .drink-select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: white;
+            font-size: 0.9rem;
+            outline: none;
+            font-family: 'Assistant', sans-serif;
+        }
+
+        .note-textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+            background: white;
+            font-family: 'Assistant', sans-serif;
+        }
+
+        .note-textarea:focus, .drink-select:focus {
+            border-color: var(--primary);
+        }
+
+        /* בר תחתון צף */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 550px;
+            margin: 0 auto;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .cart-bar.visible {
+            transform: translateY(0);
+        }
+
+        .cart-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-bg);
+        }
+
+        .btn-checkout {
+            background: linear-gradient(135deg, var(--primary) 0%, #f59e0b 100%);
+            color: var(--dark-bg);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>בי <span>בורגר</span></h1>
+        </div>
+        <p>המבורגר פרימיום • חלות • בגטים באפייה במקום</p>
+    </header>
+
+    <div class="categories-nav">
+        <button class="category-tab active" onclick="scrollToCategory('burgers')">המבורגרים</button>
+        <button class="category-tab" onclick="scrollToCategory('meals')">ארוחות</button>
+        <button class="category-tab" onclick="scrollToCategory('house-burgers')">המבורגר הבית</button>
+        <button class="category-tab" onclick="scrollToCategory('baguettes')">בגטים וחלה</button>
+        <button class="category-tab" onclick="scrollToCategory('combos')">קומבינות</button>
+        <button class="category-tab" onclick="scrollToCategory('sides')">תוספות</button>
+        <button class="category-tab" onclick="scrollToCategory('salads')">סלטים</button>
+        <button class="category-tab" onclick="scrollToCategory('drinks')">שתייה</button>
+    </div>
+
+    <div class="menu-container">
+        
+        <section id="burgers" class="category-section">
+            <h2 class="category-title">המבורגר (קציצה בלבד)</h2>
+            <div class="menu-item-wrapper" data-id="b110" data-name="המבורגר 110 גר'" data-price="30">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 110 גר'</div><div class="item-price">₪30</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('b110', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('b110')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('b110', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="b150" data-name="המבורגר 150 גר'" data-price="40">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 150 גר'</div><div class="item-price">₪40</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('b150', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('b150')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('b150', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="b260" data-name="המבורגר 260 גר'" data-price="50">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 260 גר'</div><div class="item-price">₪50</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('b260', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('b260')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('b260', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="b300" data-name="המבורגר 300 גר'" data-price="55">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 300 גר'</div><div class="item-price">₪55</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('b300', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('b300')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('b300', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="b410" data-name="המבורגר 410 גר'" data-price="65">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 410 גר'</div><div class="item-price">₪65</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('b410', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('b410')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('b410', this.value)"></textarea></div>
+            </div>
+        </section>
+
+        <section id="meals" class="category-section">
+            <h2 class="category-title">ארוחות המבורגר</h2>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">הארוחה כוללת: תוספת לבחירה (צ'יפס / טבעות בצל) + פחית שתייה</p>
+            
+            <div class="menu-item-wrapper" data-id="m110" data-name="ארוחת המבורגר 110 גר'" data-price="50" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת המבורגר 110 גר'</div><div class="item-price">₪50</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('m110', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('m110')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('m110', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת (צ'יפס/טבעות בצל) והערות..." oninput="updateNote('m110', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="m150" data-name="ארוחת המבורגר 150 גר'" data-price="60" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת המבורגר 150 גר'</div><div class="item-price">₪60</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('m150', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('m150')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('m150', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת (צ'יפס/טבעות בצל) והערות..." oninput="updateNote('m150', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="m260" data-name="ארוחת המבורגר 260 גר'" data-price="70" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת המבורגר 260 גר'</div><div class="item-price">₪70</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('m260', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('m260')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('m260', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת והערות..." oninput="updateNote('m260', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="m300" data-name="ארוחת המבורגר 300 גר'" data-price="75" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת המבורגר 300 גר'</div><div class="item-price">₪75</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('m300', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('m300')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('m300', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת והערות..." oninput="updateNote('m300', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="m410" data-name="ארוחת המבורגר 410 גר'" data-price="85" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת המבורגר 410 גר'</div><div class="item-price">₪85</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('m410', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('m410')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('m410', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת והערות..." oninput="updateNote('m410', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="msch" data-name="ארוחת שניצל" data-price="50" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ארוחת שניצל</div><div class="item-price">₪50</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('msch', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('msch')">אפשרויות מנה</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('msch', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="תוספת והערות..." oninput="updateNote('msch', this.value)"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="house-burgers" class="category-section">
+            <h2 class="category-title">המבורגר הבית</h2>
+            <div class="menu-item-wrapper" data-id="h_ant" data-name="המבורגר 150 גר' אנטריקוט" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 150 גר' אנטריקוט</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('h_ant', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('h_ant')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('h_ant', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="h_lamb" data-name="המבורגר 150 גר' כבש" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">המבורגר 150 גר' כבש</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('h_lamb', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('h_lamb')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('h_lamb', this.value)"></textarea></div>
+            </div>
+        </section>
+
+        <section id="baguettes" class="category-section">
+            <h2 class="category-title">בגטים וחלת הבית</h2>
+            <div class="menu-item-wrapper" data-id="flag_chala" data-name="חלת הבית - מנת הדגל" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">חלת הבית ✨ מנת הדגל</div><div class="item-description">שניצל קריספי או קציצות הבית | מטבוחה, חצילים ופלפל חריף</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('flag_chala', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('flag_chala')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="שניצל או קציצות? רטבים ושינויים..." oninput="updateNote('flag_chala', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="bg_shn" data-name="בגט שניצל קריספי רגיל" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">בגט שניצל קריספי רגיל</div><div class="item-description">אפייה במקום</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('bg_shn', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('bg_shn')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="סלטים ורטבים בבגט..." oninput="updateNote('bg_shn', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="bg_lamb" data-name="בגט קציצות טלה" data-price="50">
+                <div class="menu-item"><div class="item-details"><div class="item-name">בגט קציצות טלה</div><div class="item-price">₪50</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('bg_lamb', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('bg_lamb')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="סלטים ורטבים..." oninput="updateNote('bg_lamb', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="bg_chk" data-name="בגט חזה עוף" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">בגט חזה עוף</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('bg_chk', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('bg_chk')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="סלטים ורטבים..." oninput="updateNote('bg_chk', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="bg_merg" data-name="בגט נקניקיות מרגז" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">בגט נקניקיות מרגז</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('bg_merg', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('bg_merg')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="סלטים ורטבים..." oninput="updateNote('bg_merg', this.value)"></textarea></div>
+            </div>
+        </section>
+
+        <section id="combos" class="category-section">
+            <h2 class="category-title">קומבינות</h2>
+            <div class="menu-item-wrapper" data-id="c110" data-name="קומבינת 110 גר'" data-price="145">
+                <div class="menu-item"><div class="item-details"><div class="item-name">קומבינת 110 גר'</div><div class="item-description">4 בורגרים 110 גר' + צ'יפס גדול + שתייה 1.5 ליטר</div><div class="item-price">₪145</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('c110', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('c110')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="פירוט רטבים והערות..." oninput="updateNote('c110', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="c150" data-name="קומבינת 150 גר'" data-price="165">
+                <div class="menu-item"><div class="item-details"><div class="item-name">קומבינת 150 גר'</div><div class="item-description">4 בורגרים 150 גר' + צ'יפס גדול + שתייה 1.5 ליטר</div><div class="item-price">₪165</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('c150', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('c150')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="פירוט רטבים והערות..." oninput="updateNote('c150', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="c260" data-name="קומבינת דאבל בורגר 260 גר'" data-price="195">
+                <div class="menu-item"><div class="item-details"><div class="item-name">קומבינת דאבל בורגר 260 גר'</div><div class="item-description">4 בורגרים 260 גר' + צ'יפס גדול + שתייה 1.5 ליטר</div><div class="item-price">₪195</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('c260', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('c260')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="פירוט רטבים והערות..." oninput="updateNote('c260', this.value)"></textarea></div>
+            </div>
+        </section>
+
+        <section id="sides" class="category-section">
+            <h2 class="category-title">תוספות</h2>
+            <div class="menu-item-wrapper" data-id="sd_ch1" data-name="צ'יפס קטן" data-price="20">
+                <div class="menu-item"><div class="item-details"><div class="item-name">צ'יפס קטן</div><div class="item-price">₪20</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_ch1', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_ch1')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_ch1', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_ch2" data-name="צ'יפס גדול" data-price="40">
+                <div class="menu-item"><div class="item-details"><div class="item-name">צ'יפס גדול</div><div class="item-price">₪40</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_ch2', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_ch2')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_ch2', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_onion" data-name="טבעות בצל" data-price="20">
+                <div class="menu-item"><div class="item-details"><div class="item-name">טבעות בצל</div><div class="item-price">₪20</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_onion', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_onion')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_onion', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_puree" data-name="כדורי פירה" data-price="20">
+                <div class="menu-item"><div class="item-details"><div class="item-name">כדורי פירה</div><div class="item-price">₪20</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_puree', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_puree')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_puree', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_sweet" data-name="צ'יפס בטטה" data-price="20">
+                <div class="menu-item"><div class="item-details"><div class="item-name">צ'יפס בטטה</div><div class="item-price">₪20</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_sweet', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_sweet')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_sweet', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_potato" data-name="פוטטו" data-price="20">
+                <div class="menu-item"><div class="item-details"><div class="item-name">פוטטו</div><div class="item-price">₪20</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_potato', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_potato')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_potato', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_nuggets" data-name="שניצלוונים" data-price="30">
+                <div class="menu-item"><div class="item-details"><div class="item-name">שניצלוונים</div><div class="item-price">₪30</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_nuggets', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_nuggets')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_nuggets', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_homef" data-name="הום פרייז" data-price="40">
+                <div class="menu-item"><div class="item-details"><div class="item-name">הום פרייז</div><div class="item-price">₪40</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_homef', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_homef')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_homef', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_caul_chili" data-name="כרובית בצ'ילי" data-price="40">
+                <div class="menu-item"><div class="item-details"><div class="item-name">כרובית בצ'ילי</div><div class="item-price">₪40</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_caul_chili', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_caul_chili')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_caul_chili', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_caul_tah" data-name="כרובית בטחינה" data-price="40">
+                <div class="menu-item"><div class="item-details"><div class="item-name">כרובית בטחינה</div><div class="item-price">₪40</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_caul_tah', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_caul_tah')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_caul_tah', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_egg" data-name="ביצת עין להמבורגר" data-price="7">
+                <div class="menu-item"><div class="item-details"><div class="item-name">ביצת עין להמבורגר</div><div class="item-price">₪7</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_egg', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_egg')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות..." oninput="updateNote('sd_egg', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sd_upgrade" data-name="שדרוג לארוחה" data-price="25" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">🍟 שדרוג לארוחה</div><div class="item-description">צ'יפס/טבעות בצל + פחית שתייה קרה</div><div class="item-price">₪25</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sd_upgrade', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sd_upgrade')">אפשרויות שדרוג</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper"><label class="drink-label">בחר פחית שתייה:</label><select class="drink-select" onchange="updateDrink('sd_upgrade', this.value)"><option value="קולה">קולה</option><option value="זירו">זירו</option><option value="ספרייט זירו">ספרייט זירו</option><option value="פאנטה">פאנטה</option></select></div>
+                    <textarea class="note-textarea" placeholder="צ'יפס או טבעות בצל? הערות נוספות..." oninput="updateNote('sd_upgrade', this.value)"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="salads" class="category-section">
+            <h2 class="category-title">סלטים</h2>
+            <div class="menu-item-wrapper" data-id="sl_isr" data-name="סלט ישראלי" data-price="45">
+                <div class="menu-item"><div class="item-details"><div class="item-name">סלט ישראלי</div><div class="item-price">₪45</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sl_isr', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sl_isr')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות או רטבים בצד..." oninput="updateNote('sl_isr', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sl_chk" data-name="סלט חזה עוף" data-price="48">
+                <div class="menu-item"><div class="item-details"><div class="item-name">סלט חזה עוף</div><div class="item-price">₪48</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sl_chk', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sl_chk')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('sl_chk', this.value)"></textarea></div>
+            </div>
+            <div class="menu-item-wrapper" data-id="sl_shn" data-name="סלט שניצל קריספי" data-price="60">
+                <div class="menu-item"><div class="item-details"><div class="item-name">סלט שניצל קריספי</div><div class="item-price">₪60</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('sl_shn', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('sl_shn')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="הערות למנה..." oninput="updateNote('sl_shn', this.value)"></textarea></div>
+            </div>
+        </section>
+
+        <section id="drinks" class="category-section">
+            <h2 class="category-title">שתייה קלה</h2>
+            <div class="menu-item-wrapper" data-id="dr_can" data-name="פחית שתייה" data-price="10" data-has-drink="true">
+                <div class="menu-item"><div class="item-details"><div class="item-name">פחית</div><div class="item-price">₪10</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('dr_can', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('dr_can')">בחר טעם</button></div></div>
+                <div class="note-container">
+                    <div class="drink-selector-wrapper">
+                        <label class="drink-label">בחר טעם לפחית:</label>
+                        <select class="drink-select" onchange="updateDrink('dr_can', this.value)">
+                            <option value="קולה">קולה</option>
+                            <option value="זירו">זירו</option>
+                            <option value="ספרייט זירו">ספרייט זירו</option>
+                            <option value="פאנטה">פאנטה</option>
+                        </select>
+                    </div>
+                    <textarea class="note-textarea" placeholder="הערה נוספת לשתייה..." oninput="updateNote('dr_can', this.value)"></textarea>
+                </div>
+            </div>
+            <div class="menu-item-wrapper" data-id="dr_bot" data-name="בקבוק קטן" data-price="12">
+                <div class="menu-item"><div class="item-details"><div class="item-name">בקבוק קטן</div><div class="item-price">₪12</div></div><div class="action-zone"><div class="qty-target"><button class="btn-add-initial" onclick="changeQty('dr_bot', 1)">הוסף</button></div><button class="btn-note-toggle" onclick="toggleNote('dr_bot')">הוסף הערה</button></div></div>
+                <div class="note-container"><textarea class="note-textarea" placeholder="איזה טעם תרצו לבקבוק הקטן?..." oninput="updateNote('dr_bot', this.value)"></textarea></div>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="cartBar" class="cart-bar">
+        <div class="cart-info">
+            <span id="cartCount" class="cart-count">0 מנות</span>
+            <span id="cartTotal" class="cart-total">₪0</span>
+        </div>
+        <button class="btn-checkout" onclick="goToCheckout()">
+            המשך לתשלום
+            <span>←</span>
+        </button>
+    </div>
+
+    <script>
+        let cart = {};
+
+        function changeQty(id, delta) {
+            const wrapper = document.querySelector(`[data-id="${id}"]`);
+            const name = wrapper.getAttribute('data-name');
+            const price = parseInt(wrapper.getAttribute('data-price'));
+            const isDrinkRelated = wrapper.getAttribute('data-has-drink') === "true";
+
+            if (!cart[id]) {
+                // הגדרת ברירת מחדל של 'קולה' לכל מנה הכוללת פחית
+                cart[id] = { 
+                    name: name, 
+                    price: price, 
+                    qty: 0, 
+                    note: "", 
+                    drinkType: isDrinkRelated ? "קולה" : null 
+                };
+            }
+
+            cart[id].qty += delta;
+
+            if (cart[id].qty <= 0) {
+                delete cart[id];
+                wrapper.querySelector('.note-container').style.display = 'none';
+            }
+
+            updateItemUI(id);
+            updateCartBar();
+        }
+
+        function updateItemUI(id) {
+            const wrapper = document.querySelector(`[data-id="${id}"]`);
+            const qtyTarget = wrapper.querySelector('.qty-target');
+            const btnNote = wrapper.querySelector('.btn-note-toggle');
+            const currentQty = cart[id] ? cart[id].qty : 0;
+            const isDrinkRelated = wrapper.getAttribute('data-has-drink') === "true";
+
+            if (currentQty > 0) {
+                qtyTarget.innerHTML = `
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="changeQty('${id}', 1)">+</button>
+                        <span class="qty-count">${currentQty}</span>
+                        <button class="btn-qty" onclick="changeQty('${id}', -1)">-</button>
+                    </div>
+                `;
+                btnNote.style.display = 'block';
+                btnNote.innerText = isDrinkRelated ? "אפשרויות ובחירה" : "הוסף הערה";
+            } else {
+                qtyTarget.innerHTML = `<button class="btn-add-initial" onclick="changeQty('${id}', 1)">הוסף</button>`;
+                btnNote.style.display = 'none';
+            }
+        }
+
+        function toggleNote(id) {
+            const wrapper = document.querySelector(`[data-id="${id}"]`);
+            const noteContainer = wrapper.querySelector('.note-container');
+            const isVisible = noteContainer.style.display === 'block';
+            noteContainer.style.display = isVisible ? 'none' : 'block';
+            
+            if(!isVisible) {
+                const text = noteContainer.querySelector('textarea');
+                if(text) text.focus();
+            }
+        }
+
+        function updateNote(id, val) {
+            if (cart[id]) {
+                cart[id].note = val;
+            }
+        }
+
+        // עדכון בחירת טעם הפחית היישר לתוך אובייקט העגלה
+        function updateDrink(id, flavor) {
+            if (cart[id]) {
+                cart[id].drinkType = flavor;
+            }
+        }
+
+        function updateCartBar() {
+            const cartBar = document.getElementById('cartBar');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            for (const id in cart) {
+                totalItems += cart[id].qty;
+                totalPrice += (cart[id].price * cart[id].qty);
+            }
+
+            if (totalItems > 0) {
+                cartCount.innerText = `${totalItems} מנות נבחרו`;
+                cartTotal.innerText = `₪${totalPrice}`;
+                cartBar.classList.add('visible');
+            } else {
+                cartBar.classList.remove('visible');
+            }
+        }
+
+        function scrollToCategory(id) {
+            const element = document.getElementById(id);
+            const headerOffset = 150;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function goToCheckout() {
+            localStorage.setItem('walkie_cart', JSON.stringify(cart));
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
