@@ -43,14 +43,14 @@
         .logo-container { display: flex; flex-direction: column; }
         .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
         .kashrut-tag { font-size: 0.8rem; color: var(--text-light); }
-        
+                
         nav ul { display: flex; list-style: none; gap: 20px; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.3s; padding: 5px; }
         nav a:hover { color: var(--primary); }
-        
+                
         .hero {
             height: 85vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),                         
                         url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -65,12 +65,12 @@
         .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; }
         .hero h1 span { color: var(--primary); }
         .hero p { font-size: clamp(1.1rem, 4vw, 1.6rem); margin-bottom: 35px; max-width: 700px; color: var(--text-light); }
-        
+                
         .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .btn {
             padding: 16px 35px;
             border-radius: 12px;
-            text-decoration: none;
+            text-decoration: none;            
             font-weight: bold;
             font-size: 1.1rem;
             transition: 0.3s;
@@ -83,7 +83,7 @@
         .btn-order:hover { background: var(--primary-dark); transform: translateY(-2px); }
         .btn-waze { background: transparent; color: #fff; border: 2px solid #00bcd4; }
         .btn-waze:hover { background: #00bcd4; color: #000; transform: translateY(-2px); }
-        
+                
         .info-strip {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -94,15 +94,15 @@
         .info-item { text-align: center; }
         .info-item h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
         .info-item p { color: var(--text-light); }
-        
+                
         .section-header { text-align: center; margin-bottom: 40px; }
         .section-header h2 { font-size: 2.5rem; color: var(--primary); }
-        
+                
         .reviews-section { padding: 80px 5%; background: #050505; text-align: center; padding-bottom: 120px; }
         .google-rating { margin-bottom: 30px; }
         .rating-score { font-size: 3.5rem; font-weight: 900; color: var(--primary); }
         .stars { color: #fbbc05; font-size: 1.8rem; margin: 10px 0; }
-        
+                
         .google-btn {
             display: inline-block;
             margin-top: 30px;
@@ -120,10 +120,9 @@
             border-style: solid;
         }
 
-        /* עיצוב הצהרת הנגישות בתחתית */
         .accessibility-container {
             text-align: center;
-            padding: 20px 5%;
+            padding: 20px 5% 5px 5%;
             background: #000;
         }
         .acc-link {
@@ -133,7 +132,17 @@
             font-size: 0.95rem;
             font-weight: bold;
         }
-        
+
+        /* עיצוב קרדיט יוצר */
+        .credits-container {
+            text-align: center;
+            padding: 10px 5% 20px 5%;
+            background: #000;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+                
         @media (max-width: 768px) {
             nav { display: none; }
             .hero h1 { font-size: 2.8rem; }
@@ -247,6 +256,10 @@
 
     <div class="accessibility-container">
         <a href="accessibility.html" class="acc-link">הצהרת נגישות</a>
+    </div>
+
+    <div class="credits-container">
+        Made By Noam Naftali
     </div>
 
     <a href="https://did.li/NetVibeWebsites" target="_blank" class="floating-badge">
