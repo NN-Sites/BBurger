@@ -18,7 +18,13 @@
             --text-muted: #bbbbbb; 
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
         body {
             font-family: 'Assistant', 'Heebo', sans-serif;
             background-color: var(--dark);
@@ -27,6 +33,7 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
+
         header {
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
@@ -40,17 +47,47 @@
             z-index: 2000;
             border-bottom: 2px solid var(--primary);
         }
-        .logo-container { display: flex; flex-direction: column; }
-        .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
-        .kashrut-tag { font-size: 0.8rem; color: var(--text-light); }
-                
-        nav ul { display: flex; list-style: none; gap: 20px; align-items: center; }
-        nav a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.3s; padding: 5px; }
-        nav a:hover { color: var(--primary); }
-                
+
+        .logo-container { 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .logo { 
+            font-size: 1.6rem; 
+            font-weight: 900; 
+            color: var(--primary); 
+            letter-spacing: 1px; 
+        }
+
+        .kashrut-tag { 
+            font-size: 0.8rem; 
+            color: var(--text-light); 
+        }
+        
+        nav ul { 
+            display: flex; 
+            list-style: none; 
+            gap: 20px; 
+            align-items: center; 
+        }
+
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            transition: 0.3s; 
+            padding: 5px; 
+        }
+
+        nav a:hover { 
+            color: var(--primary); 
+        }
+        
         .hero {
             height: 85vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),                         
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
                         url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -62,15 +99,34 @@
             padding: 20px;
             margin-top: 60px;
         }
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; }
-        .hero h1 span { color: var(--primary); }
-        .hero p { font-size: clamp(1.1rem, 4vw, 1.6rem); margin-bottom: 35px; max-width: 700px; color: var(--text-light); }
-                
-        .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+
+        .hero h1 { 
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
+            font-weight: 900; 
+        }
+
+        .hero h1 span { 
+            color: var(--primary); 
+        }
+
+        .hero p { 
+            font-size: clamp(1.1rem, 4vw, 1.6rem); 
+            margin-bottom: 35px; 
+            max-width: 700px; 
+            color: var(--text-light); 
+        }
+        
+        .btn-group { 
+            display: flex; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+
         .btn {
             padding: 16px 35px;
             border-radius: 12px;
-            text-decoration: none;            
+            text-decoration: none;
             font-weight: bold;
             font-size: 1.1rem;
             transition: 0.3s;
@@ -79,11 +135,29 @@
             gap: 10px;
             box-shadow: var(--shadow);
         }
-        .btn-order { background: var(--primary); color: #000; }
-        .btn-order:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .btn-waze { background: transparent; color: #fff; border: 2px solid #00bcd4; }
-        .btn-waze:hover { background: #00bcd4; color: #000; transform: translateY(-2px); }
-                
+
+        .btn-order { 
+            background: var(--primary); 
+            color: #000; 
+        }
+
+        .btn-order:hover { 
+            background: var(--primary-dark); 
+            transform: translateY(-2px); 
+        }
+
+        .btn-waze { 
+            background: transparent; 
+            color: #fff; 
+            border: 2px solid #00bcd4; 
+        }
+
+        .btn-waze:hover { 
+            background: #00bcd4; 
+            color: #000; 
+            transform: translateY(-2px); 
+        }
+        
         .info-strip {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -91,18 +165,54 @@
             padding: 40px 5%;
             gap: 20px;
         }
-        .info-item { text-align: center; }
-        .info-item h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
-        .info-item p { color: var(--text-light); }
-                
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-header h2 { font-size: 2.5rem; color: var(--primary); }
-                
-        .reviews-section { padding: 80px 5%; background: #050505; text-align: center; padding-bottom: 120px; }
-        .google-rating { margin-bottom: 30px; }
-        .rating-score { font-size: 3.5rem; font-weight: 900; color: var(--primary); }
-        .stars { color: #fbbc05; font-size: 1.8rem; margin: 10px 0; }
-                
+
+        .info-item { 
+            text-align: center; 
+        }
+
+        .info-item h2 { 
+            color: var(--primary); 
+            font-size: 1.3rem; 
+            margin-bottom: 8px; 
+        }
+
+        .info-item p { 
+            color: var(--text-light); 
+        }
+        
+        .section-header { 
+            text-align: center; 
+            margin-bottom: 40px; 
+        }
+
+        .section-header h2 { 
+            font-size: 2.5rem; 
+            color: var(--primary); 
+        }
+        
+        .reviews-section { 
+            padding: 80px 5%; 
+            background: #050505; 
+            text-align: center; 
+            padding-bottom: 120px; 
+        }
+
+        .google-rating { 
+            margin-bottom: 30px; 
+        }
+
+        .rating-score { 
+            font-size: 3.5rem; 
+            font-weight: 900; 
+            color: var(--primary); 
+        }
+
+        .stars { 
+            color: #fbbc05; 
+            font-size: 1.8rem; 
+            margin: 10px 0; 
+        }
+        
         .google-btn {
             display: inline-block;
             margin-top: 30px;
@@ -114,17 +224,20 @@
             font-weight: bold;
             transition: 0.3s;
         }
+
         .google-btn:hover {
             background: var(--primary);
             color: #000;
             border-style: solid;
         }
 
+        /* עיצוב הצהרת הנגישות בתחתית */
         .accessibility-container {
             text-align: center;
             padding: 20px 5% 5px 5%;
             background: #000;
         }
+
         .acc-link {
             display: inline-block;
             color: var(--primary);
@@ -134,15 +247,16 @@
         }
 
         /* עיצוב קרדיט יוצר */
-        .credits-container {
+        .creator-credit {
             text-align: center;
-            padding: 10px 5% 20px 5%;
+            padding: 5px 5% 25px 5%;
             background: #000;
             font-size: 0.85rem;
             color: var(--text-muted);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Heebo', sans-serif;
+            direction: ltr;
         }
-                
+        
         @media (max-width: 768px) {
             nav { display: none; }
             .hero h1 { font-size: 2.8rem; }
@@ -170,25 +284,30 @@
             animation: floating 3s ease-in-out infinite;
             transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
+
         .badge-content {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
+
         .badge-title, .badge-action {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.2;
         }
+
         .badge-title {
             font-size: 12px;
             font-weight: 400;
             color: rgba(255, 255, 255, 0.7);
         }
+
         .badge-action {
             font-size: 13px;
             font-weight: 700;
             color: #ffffff;
         }
+
         .badge-dot {
             width: 6px;
             height: 6px;
@@ -197,11 +316,13 @@
             flex-shrink: 0;
             box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
         }
+
         @keyframes floating {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45); }
             100% { transform: translateY(0px); }
         }
+
         .floating-badge:hover {
             animation-play-state: paused;
             transform: translateY(-4px);
@@ -212,6 +333,7 @@
     </style>
 </head>
 <body>
+
     <header>
         <div class="logo-container">
             <div class="logo">B BURGER</div>
@@ -236,13 +358,24 @@
         </section>
 
         <section class="info-strip">
-            <div class="info-item"><h2>📍 כתובת</h2><p>הדרור 14</p></div>
-            <div class="info-item"><h2>⏰ שעות פעילות</h2><p>א'-ה' 10:00-22:00</p></div>
-            <div class="info-item"><h2>🛵 משלוחים</h2><p>הסניף והסביבה</p></div>
+            <div class="info-item">
+                <h2>📍 כתובת</h2>
+                <p>הדרור 14</p>
+            </div>
+            <div class="info-item">
+                <h2>⏰ שעות פעילות</h2>
+                <p>א'-ה' 10:00-22:00</p>
+            </div>
+            <div class="info-item">
+                <h2>🛵 משלוחים</h2>
+                <p>הסניף והסביבה</p>
+            </div>
         </section>
 
         <section class="reviews-section" id="reviews">
-            <div class="section-header"><h2>מה הלקוחות אומרים?</h2></div> 
+            <div class="section-header">
+                <h2>מה הלקוחות אומרים?</h2>
+            </div> 
             <div class="google-rating" aria-label="דירוג 4.6 מתוך 5">
                 <div class="rating-score">4.6</div>
                 <div class="stars">★★★★★</div>
@@ -258,7 +391,7 @@
         <a href="accessibility.html" class="acc-link">הצהרת נגישות</a>
     </div>
 
-    <div class="credits-container">
+    <div class="creator-credit">
         Made By Noam Naftali
     </div>
 
@@ -269,5 +402,6 @@
             <span class="badge-action">לחצו כאן!</span>
         </div>
     </a>
+
 </body>
 </html>
