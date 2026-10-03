@@ -58,22 +58,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0.8rem 2rem;
         }
 
         .logo {
-            font-family: 'Rubik', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            text-decoration: none;
         }
 
-        .logo span {
-            color: #fff;
+        .logo img {
+            height: 48px;
+            width: auto;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .nav-links {
@@ -109,7 +108,7 @@
             transform: translateY(-2px);
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero Section with Background Image --- */
         .hero {
             position: relative;
             min-height: 90vh;
@@ -117,7 +116,8 @@
             align-items: center;
             justify-content: center;
             padding: 8rem 2rem 4rem;
-            background: radial-gradient(circle at center, rgba(255, 159, 28, 0.15) 0%, rgba(15, 15, 17, 1) 70%);
+            background: linear-gradient(180deg, rgba(15, 15, 17, 0.75) 0%, rgba(15, 15, 17, 0.92) 80%, rgba(15, 15, 17, 1) 100%), 
+                        url('https://lh3.googleusercontent.com/proxy/5ptOpyTHyfMnyuuFMPlClxK1nW5rM0aVY4QGr-k6xoQxWppKa5qN7o6w5hWMP_bGUPwtv61xqRbcqCq6CduqEIwIonvvqxfmhN-wxzKglR_JDAcpePl569ds7wSHABghijeniDjpoS07-RJ7vdchISoyHQyz5A=s680-w680-h510-rw') center/cover no-repeat;
             text-align: center;
         }
 
@@ -136,6 +136,7 @@
             font-size: 0.9rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
+            backdrop-filter: blur(5px);
         }
 
         .hero h1 {
@@ -144,6 +145,7 @@
             font-weight: 900;
             line-height: 1.2;
             margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
         }
 
         .hero h1 span {
@@ -152,8 +154,9 @@
 
         .hero p {
             font-size: 1.25rem;
-            color: var(--text-muted);
+            color: #e5e7eb;
             margin-bottom: 2.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
         .hero-buttons {
@@ -189,13 +192,14 @@
         .btn-outline {
             border: 2px solid var(--border-color);
             color: var(--text-main);
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(15, 15, 17, 0.6);
+            backdrop-filter: blur(10px);
         }
 
         .btn-outline:hover {
             border-color: var(--primary);
             color: var(--primary);
-            background: rgba(255, 159, 28, 0.05);
+            background: rgba(255, 159, 28, 0.1);
         }
 
         /* --- Info Section --- */
@@ -381,6 +385,12 @@
             gap: 1.5rem;
         }
 
+        .footer-logo {
+            height: 60px;
+            width: auto;
+            border-radius: 50%;
+        }
+
         .accessibility-link {
             display: inline-flex;
             align-items: center;
@@ -521,7 +531,7 @@
     <header>
         <div class="nav-container">
             <a href="#" class="logo">
-                <i class="fa-solid fa-burger"></i> B <span>BURGER</span>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYCwPQfA14mMENgRBUufs92CCvDwa5ULTHJ_lZFV-iGL5vpVcjMwhbODY&s=10" alt="בי בורגר לוגו">
             </a>
             <ul class="nav-links">
                 <li><a href="#info">מידע ושעות</a></li>
@@ -535,7 +545,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <span class="badge"><i class="fa-solid fa-star"></i> ההמבורגר הכי טעים ביבנה</span>
+            <span class="badge"><i class="fa-solid fa-star"></i> ההמבורגר הכי טעים</span>
             <h1>חוויית המבורגר פרימיום <span>בשפע ואיכות</span> ללא תחרות</h1>
             <p>חלת שניצל עבודת יד, המבורגרים עסיסיים, צ'יפס קראנצ'י ושירות עם כל הלב. כשרות בד"ץ בית יוסף.</p>
             <div class="hero-buttons">
@@ -670,7 +680,7 @@
                         </div>
                         <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     </div>
-                    <p class="review-text">ההמבורגר הכי טעים עם שירות מכל הלב ושפע אמיתי! תודה לשלומי וכל הצוות היקר ❤️️</p>
+                    <p class="review-text">ההמבורגר הכי טעים עם שירות מכל הלב ושפע אמיתי! תודה לשלומי וכל הצוות היקר ❤️</p>
                     <div class="owner-response">
                         <strong>תגובת בי בורגר:</strong>
                         תודה על הפרגון מהלב 🩷🙏🏽
@@ -749,9 +759,7 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <a href="#" class="logo">
-                <i class="fa-solid fa-burger"></i> B <span>BURGER</span>
-            </a>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYCwPQfA14mMENgRBUufs92CCvDwa5ULTHJ_lZFV-iGL5vpVcjMwhbODY&s=10" alt="בי בורגר לוגו" class="footer-logo">
             
             <a href="accessibility.html" class="accessibility-link">
                 <i class="fa-universal-access"></i> הצהרת נגישות
