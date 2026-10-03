@@ -381,22 +381,6 @@
             gap: 1.5rem;
         }
 
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
         .accessibility-link {
             display: inline-flex;
             align-items: center;
@@ -437,6 +421,81 @@
             text-decoration: underline;
         }
 
+        /* --- Floating Badge --- */
+        .floating-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 16px;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            direction: rtl;
+            user-select: none;
+            animation: floating 3s ease-in-out infinite;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+
+        .badge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .badge-title, .badge-action {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.2;
+        }
+
+        .badge-title {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .badge-action {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #38bdf8;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+        }
+
+        @keyframes floating {
+            0% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-8px); 
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45); 
+            }
+            100% { 
+                transform: translateY(0px); 
+            }
+        }
+
+        .floating-badge:hover {
+            animation-play-state: paused;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            background-color: rgba(30, 30, 30, 0.9);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -447,6 +506,11 @@
             }
             .review-card {
                 width: 290px;
+            }
+            .floating-badge {
+                bottom: 15px;
+                right: 15px;
+                padding: 8px 12px;
             }
         }
     </style>
@@ -497,7 +561,7 @@
             <div class="info-card">
                 <i class="fa-solid fa-map-location-dot"></i>
                 <h3>הגעה וניווט</h3>
-                <p>רחוב הדרור 14, יבנה</p>
+                <p>רחוב הדרור 14</p>
                 <br>
                 <a href="https://waze.com/ul?q=הדרור%2014%20יבנה" target="_blank"><i class="fa-solid fa-route"></i> ניווט באמצעות Waze</a>
             </div>
@@ -530,7 +594,7 @@
                         </div>
                         <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     </div>
-                    <p class="review-text">חלת שניצל הכי טעימה ביבנה עבודת יד ברמה מאוד גבוהה שווה כל שקל! וההמבורגרים שלהם מושלמים, תודה שיש מקום כזה מושלם ביבנה!</p>
+                    <p class="review-text">חלת שניצל הכי טעימה עבודת יד ברמה מאוד גבוהה שווה כל שקל! וההמבורגרים שלהם מושלמים, תודה שיש מקום כזה מושלם!</p>
                     <div class="owner-response">
                         <strong>תגובת בי בורגר:</strong>
                         תודה רבה על הפרגון 🩷🩷
@@ -558,7 +622,7 @@
                         </div>
                         <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     </div>
-                    <p class="review-text">מקום יפה בעיר יבנה הנפלאה! המבורגר טעים במיוחד, סלטים טובים, צ'יפס בשפע מפנק ומשביע לאורך זמן.</p>
+                    <p class="review-text">מקום יפה! המבורגר טעים במיוחד, סלטים טובים, צ'יפס בשפע מפנק ומשביע לאורך זמן.</p>
                     <div class="owner-response">
                         <strong>תגובת בי בורגר:</strong>
                         אשש עלייך איזה פרגון 🩷
@@ -606,7 +670,7 @@
                         </div>
                         <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     </div>
-                    <p class="review-text">ההמבורגר הכי טעים ביבנה עם שירות מכל הלב ושפע אמיתי! תודה לשלומי וכל הצוות היקר ❤️</p>
+                    <p class="review-text">ההמבורגר הכי טעים עם שירות מכל הלב ושפע אמיתי! תודה לשלומי וכל הצוות היקר ❤️️</p>
                     <div class="owner-response">
                         <strong>תגובת בי בורגר:</strong>
                         תודה על הפרגון מהלב 🩷🙏🏽
@@ -638,7 +702,7 @@
                         </div>
                         <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     </div>
-                    <p class="review-text">ביקרנו ב-B בורגר יבנה קבוצה של 10 חיילים. הכל בשפע וטעים! בסוף הארוחה הבעלים לא רצה לקחת כסף מהחיילים. אנשים מדהימים!</p>
+                    <p class="review-text">ביקרנו ב-B בורגר קבוצה של 10 חיילים. הכל בשפע וטעים! בסוף הארוחה הבעלים לא רצה לקחת כסף מהחיילים. אנשים מדהימים!</p>
                     <div class="owner-response">
                         <strong>תגובת בי בורגר:</strong>
                         B burger לא לוקחים כסף לחיילים, מה שנותר לנו זה רק להודות לכם! 🩷🙏🏽
@@ -673,6 +737,15 @@
         </div>
     </section>
 
+    <!-- Floating Badge -->
+    <a href="https://did.li/NetVibeWebsites" target="_blank" class="floating-badge">
+        <span class="badge-dot"></span>
+        <div class="badge-content">
+            <span class="badge-title">רוצים גם אתר כזה?</span>
+            <span class="badge-action">לחצו כאן!</span>
+        </div>
+    </a>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -695,7 +768,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             const track = document.getElementById("carouselTrack");
             const cards = track.innerHTML;
-            // שכפול הביקורות כדי ליצור לולאה אינסופית וחלקה לחלוטין
             track.innerHTML += cards;
         });
     </script>
